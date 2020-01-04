@@ -1,0 +1,35 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@using System.Net.Http
+@using System.Net.Http.Headers
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@using Services;
+
+<h3>Index</h3>
+
+@foreach (var item in diaryItems)
+{
+    @item.Id <h4>@item.Title <br /></h4>
+    <p>@item.Body</p>
+    <button @onclick="@(() => ShowMore(item.Id))">Show more</button>
+}
+
+<br />
+<NavLink href="/item/new">
+    New
+</NavLink>
+
+@code {
+    IList<DiaryItem> diaryItems = new List<DiaryItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        diaryItems = await DiaryService.GetAll(JSRuntime);
+    }
+
+    public void ShowMore(string Id)
+    {
+        NavigationManager.NavigateTo($"item/{Id}");
+    }
+}

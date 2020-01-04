@@ -1,0 +1,24 @@
+﻿@page "/item/{Id}"
+@using Services;
+@inject IJSRuntime JSRuntime
+<h3>ShowItem</h3>
+
+@if (item != null)
+{
+    <h2>@item.Title</h2>
+    <p>@item.Body</p>
+    <h3>Id is @Id</h3>
+}
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    public DiaryItem item { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Id = Id;
+        item = await DiaryService.Get(Id, JSRuntime);
+    }
+}
