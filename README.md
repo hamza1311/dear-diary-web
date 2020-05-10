@@ -1,6 +1,6 @@
 # Dear Diary
 
-Simple diary app made with angular with firebase.
+Simple diary app made with angular and firebase.
 
 ## Usage
 
