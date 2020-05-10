@@ -1,0 +1,14 @@
+<section class="home-container">
+    <section class="home-top-row">
+        <h2>Your Diary</h2>
+        <span class="spacer"></span>
+        <mat-icon id="add-icon" aria-hidden="false" aria-label="New diary item" routerLink="/item/new">add</mat-icon>
+    </section>
+
+    <section class="home-diary-items">
+        <div *ngFor="let item of items | async">
+            <app-show-item-card routerLink="/item/edit/{{item.id}}" [item]="item"></app-show-item-card>
+        </div>
+    </section>
+
+</section>

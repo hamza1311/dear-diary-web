@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "deardiary-app": {
+      "hosting": {
+        "dear-diary": [
+          "deardiary-app"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "deardiary-app"
+  }
+}

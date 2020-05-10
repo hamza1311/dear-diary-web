@@ -1,0 +1,14 @@
+<!--suppress HtmlFormInputWithoutLabel -->
+<section class="new-item-container" *ngIf="item">
+    <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="item.title">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Content</mat-label>
+        <textarea matInput cdkTextareaAutosize [(ngModel)]="item.content"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button (click)="save()">Save</button>
+</section>

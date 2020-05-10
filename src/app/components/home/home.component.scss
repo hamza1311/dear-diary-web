@@ -1,0 +1,21 @@
+.home-container {
+    width: 60%;
+    padding: 1.3em 1.5em;
+
+    .home-top-row {
+        display: flex;
+
+        #add-icon {
+            align-self: center;
+        }
+    }
+
+    .home-diary-items {
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+    }
+
+    h2 { margin: 0; }
+}

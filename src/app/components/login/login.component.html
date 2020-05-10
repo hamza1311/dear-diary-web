@@ -1,0 +1,48 @@
+<!--suppress HtmlFormInputWithoutLabel -->
+<section class="form-section" *ngIf="credentials">
+
+    <mat-form-field *ngIf="signinOrSignup == 'Sign up'">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="credentials.displayName">
+    </mat-form-field>
+
+
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" placeholder="bruh@fuck.com" [formControl]="emailFormControl"
+               [errorStateMatcher]="matcher" [(ngModel)]="credentials.email">
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')"> Please
+            enter a
+            valid email address
+        </mat-error>
+
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [formControl]="passwordFormControl" [errorStateMatcher]="matcher"
+               [(ngModel)]="credentials.password">
+
+        <mat-error *ngIf="passwordFormControl.hasError('required')">
+            Password is <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+
+    <section class="button-section">
+        <button mat-raised-button (click)="loginOrSignup()">{{signinOrSignup}}</button>
+    </section>
+
+
+    <p>
+        <span *ngIf="signinOrSignup == 'Sign up'">Already </span>
+        <span *ngIf="signinOrSignup == 'Login'">Don't </span>
+        have an account?
+        <a (click)="swapSigninOrSignup()">
+            <span *ngIf="signinOrSignup == 'Sign up'">Login</span>
+            <span *ngIf="signinOrSignup == 'Login'">Create one</span>
+        </a>
+    </p>
+</section>
