@@ -1,27 +1,19 @@
-# DearDiary
+# Dear Diary
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
+Simple diary app made with angular with firebase.
 
-## Development server
+## Usage
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+You can find the hosted version of this app [here](https://deardiary-app.web.app/).
 
-## Code scaffolding
+### Self hosting
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+In order to run this app, you need to:
+* Create a firebase project and obtain your configuration. You can do so [here](https://console.firebase.google.com/). 
+* Replace the mock config in `src/envrionments/envrionment.ts` with the real config you obtained in the last step.
+* Run `npm install` to install dependencies.
+* Run `ng serve` to run the webpack development server.
 
-## Build
+## Contributions
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Pull requests are welcome
