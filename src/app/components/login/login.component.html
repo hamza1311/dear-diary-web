@@ -9,25 +9,27 @@
 
     <mat-form-field>
         <mat-label>Email</mat-label>
-        <input matInput type="email" placeholder="bruh@fuck.com" [formControl]="emailFormControl"
-               [errorStateMatcher]="matcher" [(ngModel)]="credentials.email">
-        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')"> Please
-            enter a
-            valid email address
-        </mat-error>
+        <input matInput type="email" placeholder="bruh@fuck.com" [(ngModel)]="credentials.email" required
+               [errorStateMatcher]="matcher"
+               #emailField="ngModel">
 
-        <mat-error *ngIf="emailFormControl.hasError('required')">
+        <mat-error *ngIf="emailField.hasError('required')">
             Email is <strong>required</strong>
         </mat-error>
+
     </mat-form-field>
 
     <mat-form-field>
         <mat-label>Password</mat-label>
-        <input matInput type="password" [formControl]="passwordFormControl" [errorStateMatcher]="matcher"
-               [(ngModel)]="credentials.password">
+        <input matInput type="password" minlength="6" required [errorStateMatcher]="matcher"
+               [(ngModel)]="credentials.password" #passwordField="ngModel">
 
-        <mat-error *ngIf="passwordFormControl.hasError('required')">
+        <mat-error *ngIf="passwordField.hasError('required')">
             Password is <strong>required</strong>
+        </mat-error>
+
+        <mat-error *ngIf="passwordField.hasError('minlength')">
+            Password must be at least <strong>6</strong> characters
         </mat-error>
     </mat-form-field>
 

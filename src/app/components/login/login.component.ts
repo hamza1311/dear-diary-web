@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { Component, NgZone, OnInit } from '@angular/core'
-import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms'
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms'
 import { ErrorStateMatcher } from '@angular/material/core'
 import { Router } from '@angular/router'
 import { AngularFireAuth } from '@angular/fire/auth'
 /* eslint-enable no-unused-vars */
 
 /** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
+export class LoginFormErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         const isSubmitted = form && form.submitted
         return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted))
@@ -23,16 +23,7 @@ type signinOrSignup = 'Login' | 'Sign up'
 })
 export class LoginComponent implements OnInit {
 
-    emailFormControl = new FormControl('', [
-        Validators.required,
-        Validators.email,
-    ]);
-
-    passwordFormControl = new FormControl('', [
-        Validators.required,
-    ]);
-
-    matcher = new MyErrorStateMatcher();
+    matcher = new LoginFormErrorStateMatcher();
 
     signinOrSignup: signinOrSignup = 'Login';
     
@@ -45,7 +36,6 @@ export class LoginComponent implements OnInit {
         // noinspection JSIgnoredPromiseFromCall
         this.auth.onAuthStateChanged(user => {
             if (user) {
-                console.log('navuagte')
                 this.ngZone.run(() => {
                     this.router.navigateByUrl('/home').then(() => {})
                 })
@@ -58,7 +48,6 @@ export class LoginComponent implements OnInit {
     }
 
     async loginOrSignup() {
-        console.log(this.credentials)
         const { email, password } = this.credentials
         if (this.signinOrSignup == 'Login') {
             await this.auth.signInWithEmailAndPassword(email, password)
@@ -68,8 +57,5 @@ export class LoginComponent implements OnInit {
             await resp.user.updateProfile({ displayName: this.credentials.displayName })
         }
         await this.router.navigateByUrl('/home')
-        const cu = await this.auth.currentUser
-        console.log((cu))
-        console.log(cu.displayName)
     }
 }
