@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { NewItemComponent } from './components/new-item/new-item.component'
 import { MatCardModule } from '@angular/material/card'
 import { ShowItemCardComponent } from './components/show-item-card/show-item-card.component'
+import { ServiceWorkerModule } from '@angular/service-worker'
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { ShowItemCardComponent } from './components/show-item-card/show-item-car
         MatIconModule,
         MatCardModule,
         FormsModule,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ],
     providers: [],
     bootstrap: [AppComponent]

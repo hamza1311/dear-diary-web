@@ -6,9 +6,7 @@
     </section>
 
     <section class="home-diary-items">
-        <div *ngFor="let item of items | async">
-            <app-show-item-card routerLink="/item/edit/{{item.id}}" [item]="item"></app-show-item-card>
-        </div>
+        <app-show-item-card *ngFor="let item of items | async" class="show-item-card" routerLink="/item/edit/{{item.id}}" [item]="item"></app-show-item-card>
     </section>
 
 </section>

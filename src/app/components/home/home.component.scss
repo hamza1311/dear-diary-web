@@ -1,6 +1,11 @@
+@import "~src/variables";
+
 .home-container {
-    width: 60%;
     padding: 1.3em 1.5em;
+
+    @media (min-width: $query-max-width) {
+        width: 60%;
+    }
 
     .home-top-row {
         display: flex;
@@ -14,7 +19,11 @@
         margin-top: 1em;
         display: flex;
         flex-direction: column;
-        gap: 1.2em;
+        //gap: 1.2em; Thanks chrome
+
+        .show-item-card {
+            margin-bottom: 1.2em;
+        }
     }
 
     h2 { margin: 0; }
