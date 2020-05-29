@@ -29,7 +29,7 @@ import { ServiceWorkerModule } from '@angular/service-worker'
         ShowItemCardComponent,
     ],
     imports: [
-        BrowserModule.withServerTransition({ appId: 'serverApp' }),
+        BrowserModule,
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
