@@ -19,6 +19,7 @@ import { NewItemComponent } from './components/new-item/new-item.component'
 import { MatCardModule } from '@angular/material/card'
 import { ShowItemCardComponent } from './components/show-item-card/show-item-card.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
+import { MatMenuModule } from '@angular/material/menu'
 
 @NgModule({
     declarations: [
@@ -44,6 +45,7 @@ import { ServiceWorkerModule } from '@angular/service-worker'
         MatCardModule,
         FormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        MatMenuModule,
     ],
     providers: [],
     bootstrap: [AppComponent]

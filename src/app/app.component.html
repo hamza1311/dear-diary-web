@@ -2,9 +2,21 @@
     <mat-toolbar-row>
         <h1 routerLink="/" class="app-title">Dear Diary</h1>
         <span class="spacer"></span>
-        <!--TODO make this look better
-        <span *ngIf="currentUser">{{currentUser.displayName}}</span>-->
-        <button mat-button *ngIf="currentUser" (click)="logout()">Logout</button>
+
+        <section class="user">
+            <span *ngIf="currentUser" class="username" [matMenuTriggerFor]="menu">
+                <mat-icon>person</mat-icon>
+                {{currentUser.displayName}}
+            </span>
+
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngIf="currentUser" (click)="logout()">
+                    <mat-icon>exit_to_app</mat-icon>
+                    <span>Logout</span>
+                </button>
+            </mat-menu>
+        </section>
+
     </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>

@@ -1,3 +1,14 @@
 .app-title {
     margin-left: 0.3rem;
 }
+
+.user {
+    margin-right: 0.8em;
+
+    .username {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+}
