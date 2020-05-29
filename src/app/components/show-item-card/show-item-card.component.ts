@@ -16,7 +16,7 @@ export class ShowItemCardComponent implements OnInit {
 
     get itemContent() {
         const isSmallScreen = this.breakpointObserver.isMatched('(max-width: 600px)')
-        const size = isSmallScreen ? 100 : 300
+        const size = isSmallScreen ? 100 : 450
         return this.item.content.length > size ? this.item.content.substr(0, size) + '...' : this.item.content
     }
 }
