@@ -18,7 +18,7 @@ export class DiaryService {
 
     private async getItemsCollectionForCurrentUser() {
         const currentUser = await this.auth.currentUser
-        return this.firestore.collection(`/users/${currentUser.uid}/items`)
+        return this.firestore.collection(`/users/${currentUser.uid}/items`, ref => ref.orderBy('createdAt', 'desc'))
     }
 
     async getAllItems() {
