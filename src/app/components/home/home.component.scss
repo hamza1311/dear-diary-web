@@ -7,14 +7,6 @@
         padding-right: 2em;
     }
 
-    .home-top-row {
-        display: flex;
-
-        #add-icon {
-            align-self: center;
-        }
-    }
-
     .home-diary-items {
         margin-top: 1em;
         display: flex;
@@ -24,6 +16,12 @@
         .show-item-card {
             margin-bottom: 1.2em;
         }
+    }
+
+    #add-fab {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
     }
 
     h2 { margin: 0; }
