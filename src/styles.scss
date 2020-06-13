@@ -15,15 +15,9 @@ html, body {
 }
 
 body {
-    //FF212121
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    //background: rgb(33, 33, 33);
     background: #121212;
-    color: white;
-}
-
-.spacer {
-    flex: 1 1 auto;
+    color: #d7d7d7;
 }
 
 $app-dark-theme: mat-dark-theme($primary-color, $accent-color);
