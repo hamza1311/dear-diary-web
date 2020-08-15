@@ -9,6 +9,10 @@
             </span>
 
             <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngIf="currentUser" (click)="changePassword()">
+                    <mat-icon>exit_to_app</mat-icon>
+                    <span>Change password</span>
+                </button>
                 <button mat-menu-item *ngIf="currentUser" (click)="logout()">
                     <mat-icon>exit_to_app</mat-icon>
                     <span>Logout</span>

@@ -30,4 +30,9 @@ export class AppComponent implements OnInit {
             this.router.navigateByUrl('/login').then(() => {})
         })
     }
+
+    async changePassword() {
+        await (await this.auth.currentUser).updatePassword('')
+        await this.router.navigateByUrl('/')
+    }
 }
