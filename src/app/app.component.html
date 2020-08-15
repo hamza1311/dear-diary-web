@@ -1,17 +1,17 @@
-<mat-toolbar class="mat-elevation-z3">
+<mat-toolbar class="mat-elevation-z3 unselectable">
     <mat-toolbar-row>
-        <h1 routerLink="/" class="app-title">Dear Diary</h1>
+        <h1 routerLink="/" class="app-title clickable">Dear Diary</h1>
 
         <section class="user">
-            <span *ngIf="currentUser" class="username" [matMenuTriggerFor]="menu">
+            <span *ngIf="currentUser" class="username clickable" [matMenuTriggerFor]="menu">
                 <mat-icon>person</mat-icon>
                 {{currentUser.displayName}}
             </span>
 
             <mat-menu #menu="matMenu">
-                <button mat-menu-item *ngIf="currentUser" (click)="changePassword()">
-                    <mat-icon>exit_to_app</mat-icon>
-                    <span>Change password</span>
+                <button mat-menu-item *ngIf="currentUser" (click)="changeUserSettings()">
+                    <mat-icon>edit</mat-icon>
+                    <span>Update user settings</span>
                 </button>
                 <button mat-menu-item *ngIf="currentUser" (click)="logout()">
                     <mat-icon>exit_to_app</mat-icon>

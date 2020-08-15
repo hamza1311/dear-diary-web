@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import { firestore } from 'firebase'
-
+/* eslint-disable no-unused-vars */
 export class DiaryItem {
     constructor(
         public title: string,

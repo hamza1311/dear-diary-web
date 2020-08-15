@@ -20,6 +20,14 @@ body {
     color: #d7d7d7;
 }
 
+.unselectable {
+    user-select: none;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
 $app-dark-theme: mat-dark-theme($primary-color, $accent-color);
 
 @include angular-material-theme($app-dark-theme);

@@ -2,6 +2,8 @@
 import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Router } from '@angular/router'
+import { MatDialog } from '@angular/material/dialog'
+import { ChangeUserSettingsComponent } from './components/change-user-settings/change-user-settings.component'
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -13,14 +15,13 @@ export class AppComponent implements OnInit {
     currentUser;
 
     // eslint-disable-next-line no-unused-vars
-    constructor(private auth: AngularFireAuth, private router: Router) {
+    constructor(private auth: AngularFireAuth, private router: Router, public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
         // noinspection JSIgnoredPromiseFromCall
         this.auth.onAuthStateChanged(user => {
             this.currentUser = user
-            console.log(this.currentUser.displayName)
         })
     }
 
@@ -31,8 +32,9 @@ export class AppComponent implements OnInit {
         })
     }
 
-    async changePassword() {
-        await (await this.auth.currentUser).updatePassword('')
-        await this.router.navigateByUrl('/')
+    async changeUserSettings() {
+        this.dialog.open(ChangeUserSettingsComponent, {
+            width: '50em'
+        })
     }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { DiaryItemWithId } from '../models/DiaryItem'
 import { AngularFireAuth } from '@angular/fire/auth'
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/app'
 import 'firebase/firestore'
 /* eslint-enable no-unused-vars */
 
@@ -24,7 +24,7 @@ export class DiaryService {
     async getAllItems() {
         return await this.getItemsCollectionForCurrentUser()
     }
-    
+
     async createItem(title: string, content: string) {
         return await (await this.getItemsCollectionForCurrentUser()).add({
             title,

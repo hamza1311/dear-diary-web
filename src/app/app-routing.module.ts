@@ -7,8 +7,7 @@ import { NewItemComponent } from './components/new-item/new-item.component'
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard'
 
 const routes: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: '/login' },
-    { path: 'home', component: HomeComponent, canActivate: [AngularFireAuthGuard] },
+    { path: '', component: HomeComponent, canActivate: [AngularFireAuthGuard] },
     { path: 'login', component: LoginComponent },
     {
         path: 'item', canActivate: [AngularFireAuthGuard], children: [
@@ -16,12 +15,13 @@ const routes: Routes = [
             { path: 'edit/:id', component: NewItemComponent },
         ]
     },
+    { path: '', pathMatch: 'full', redirectTo: '/login' },
 ]
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled'
-})],
+        initialNavigation: 'enabled'
+    })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

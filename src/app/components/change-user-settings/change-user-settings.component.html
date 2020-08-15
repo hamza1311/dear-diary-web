@@ -1,0 +1,60 @@
+<!--suppress HtmlFormInputWithoutLabel -->
+<h1 mat-dialog-title>Change user settings</h1>
+<div mat-dialog-content>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Change Password
+                </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <section class="change-password-input-container">
+
+                <mat-form-field>
+                    <mat-label>Current password</mat-label>
+                    <input
+                            matInput
+                            [(ngModel)]="currentPassword"
+                            type="password">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>New password</mat-label>
+                    <input
+                            matInput
+                            [(ngModel)]="newPassword"
+                            [errorStateMatcher]="matcher"
+                            minlength="6"
+                            #newPasswordField="ngModel"
+                            type="password">
+
+                    <mat-error *ngIf="newPasswordField.hasError('minlength')">
+                        Password must be at least <strong>6</strong> characters
+                    </mat-error>
+                </mat-form-field>
+            </section>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Change display name
+                </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <mat-form-field>
+                <mat-label>New name</mat-label>
+                <input matInput [(ngModel)]="newName">
+            </mat-form-field>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<!--No idea why it isn't picking it up as input of directive -->
+<!--suppress HtmlDeprecatedAttribute -->
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="save()">Save</button>
+</div>
+

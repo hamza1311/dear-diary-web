@@ -20,6 +20,11 @@ import { MatCardModule } from '@angular/material/card'
 import { ShowItemCardComponent } from './components/show-item-card/show-item-card.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { MatMenuModule } from '@angular/material/menu'
+import { ChangeUserSettingsComponent } from './components/change-user-settings/change-user-settings.component'
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatExpansionModule } from '@angular/material/expansion'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { AngularFirestoreModule } from '@angular/fire/firestore'
 
 @NgModule({
     declarations: [
@@ -28,11 +33,13 @@ import { MatMenuModule } from '@angular/material/menu'
         HomeComponent,
         NewItemComponent,
         ShowItemCardComponent,
+        ChangeUserSettingsComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebase),
+        AngularFirestoreModule.enablePersistence({ synchronizeTabs:true }),
         AngularFireAuthModule,
         NoopAnimationsModule,
         MatToolbarModule,
@@ -46,6 +53,9 @@ import { MatMenuModule } from '@angular/material/menu'
         FormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         MatMenuModule,
+        MatDialogModule,
+        MatExpansionModule,
+        MatSnackBarModule,
     ],
     providers: [],
     bootstrap: [AppComponent]

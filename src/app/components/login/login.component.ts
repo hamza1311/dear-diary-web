@@ -7,7 +7,7 @@ import { AngularFireAuth } from '@angular/fire/auth'
 /* eslint-enable no-unused-vars */
 
 /** Error when invalid control is dirty, touched, or submitted. */
-export class LoginFormErrorStateMatcher implements ErrorStateMatcher {
+export class FormErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         const isSubmitted = form && form.submitted
         return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted))
@@ -23,10 +23,10 @@ type signinOrSignup = 'Login' | 'Sign up'
 })
 export class LoginComponent implements OnInit {
 
-    matcher = new LoginFormErrorStateMatcher();
+    matcher = new FormErrorStateMatcher();
 
     signinOrSignup: signinOrSignup = 'Login';
-    
+
     credentials = { email: '', password: '', displayName: '' }
 
     // eslint-disable-next-line
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         this.auth.onAuthStateChanged(user => {
             if (user) {
                 this.ngZone.run(() => {
-                    this.router.navigateByUrl('/home').then(() => {})
+                    this.router.navigateByUrl('/').then(() => {})
                 })
             }
         })
@@ -53,9 +53,8 @@ export class LoginComponent implements OnInit {
             await this.auth.signInWithEmailAndPassword(email, password)
         } else {
             const resp = await this.auth.createUserWithEmailAndPassword(email, password)
-            console.log(this.credentials.displayName)
             await resp.user.updateProfile({ displayName: this.credentials.displayName })
         }
-        await this.router.navigateByUrl('/home')
+        await this.router.navigateByUrl('/')
     }
 }
