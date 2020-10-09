@@ -5,13 +5,13 @@
 export const environment = {
     production: false,
     firebase: {
-        apiKey: '<apiKey>',
-        authDomain: '<authDomain>',
-        databaseURL: '<databaseURL>',
-        projectId: '<projectId>',
-        storageBucket: '<storageBucket>',
-        messagingSenderId: '<messagingSenderId>',
-        appId: '<appId>',
+        apiKey: 'AIzaSyCc0IZmGnwe4zxsW8VrRq9-ujM6wP-bcCw',
+        authDomain: 'mykotlinfirebaseproject.firebaseapp.com',
+        databaseURL: 'https://mykotlinfirebaseproject.firebaseio.com',
+        projectId: 'mykotlinfirebaseproject',
+        storageBucket: 'mykotlinfirebaseproject.appspot.com',
+        messagingSenderId: '322067682532',
+        appId: '1:322067682532:web:363f71c8a4c2606b'
     }
 }
 

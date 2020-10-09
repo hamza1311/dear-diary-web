@@ -1,50 +1,10 @@
-<!--suppress HtmlFormInputWithoutLabel -->
-<section class="form-section" *ngIf="credentials">
-
-    <mat-form-field *ngIf="signinOrSignup == 'Sign up'">
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="credentials.displayName">
-    </mat-form-field>
-
-
-    <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input matInput type="email" placeholder="bruh@fuck.com" [(ngModel)]="credentials.email" required
-               [errorStateMatcher]="matcher"
-               #emailField="ngModel">
-
-        <mat-error *ngIf="emailField.hasError('required')">
-            Email is <strong>required</strong>
-        </mat-error>
-
-    </mat-form-field>
-
-    <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput type="password" minlength="6" required [errorStateMatcher]="matcher"
-               [(ngModel)]="credentials.password" #passwordField="ngModel">
-
-        <mat-error *ngIf="passwordField.hasError('required')">
-            Password is <strong>required</strong>
-        </mat-error>
-
-        <mat-error *ngIf="passwordField.hasError('minlength')">
-            Password must be at least <strong>6</strong> characters
-        </mat-error>
-    </mat-form-field>
-
-    <section class="button-section">
-        <button mat-raised-button (click)="loginOrSignup()">{{signinOrSignup}}</button>
-    </section>
-
-
-    <p>
-        <span *ngIf="signinOrSignup == 'Sign up'">Already </span>
-        <span *ngIf="signinOrSignup == 'Login'">Don't </span>
-        have an account?
-        <a (click)="swapSigninOrSignup()">
-            <span *ngIf="signinOrSignup == 'Sign up'">Login</span>
-            <span *ngIf="signinOrSignup == 'Login'">Create one</span>
-        </a>
-    </p>
-</section>
+<main>
+    <div>
+        <ngx-auth-firebaseui
+                (onSuccess)="redirect()"
+                [tabIndex]="0"
+                [providers]="[]"
+                [guestEnabled]="false"
+        ></ngx-auth-firebaseui>
+    </div>
+</main>
