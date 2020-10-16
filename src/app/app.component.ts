@@ -37,4 +37,8 @@ export class AppComponent implements OnInit {
             width: '50em'
         })
     }
+
+    onSignOut() {
+        this.router.navigateByUrl('/login').then(() => {})
+    }
 }

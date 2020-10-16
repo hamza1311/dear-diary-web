@@ -3,7 +3,7 @@
         <h1 routerLink="/" class="app-title clickable">Dear Diary</h1>
 
         <section class="user">
-            <ngx-auth-firebaseui-avatar></ngx-auth-firebaseui-avatar>
+            <ngx-auth-firebaseui-avatar (onSignOut)="onSignOut()"></ngx-auth-firebaseui-avatar>
         </section>
 
     </mat-toolbar-row>
