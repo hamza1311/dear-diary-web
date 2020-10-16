@@ -14,8 +14,6 @@ export class FormErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
-type signinOrSignup = 'Login' | 'Sign up'
-
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -23,38 +21,20 @@ type signinOrSignup = 'Login' | 'Sign up'
 })
 export class LoginComponent implements OnInit {
 
-    matcher = new FormErrorStateMatcher();
-
-    signinOrSignup: signinOrSignup = 'Login';
-
-    credentials = { email: '', password: '', displayName: '' }
-
     // eslint-disable-next-line
     constructor(private router: Router, private auth: AngularFireAuth, private ngZone: NgZone) {}
 
     ngOnInit(): void {
         // noinspection JSIgnoredPromiseFromCall
-        this.auth.onAuthStateChanged(user => {
+        /*this.auth.onAuthStateChanged(user => {
             if (user) {
                 this.ngZone.run(() => {
                     this.router.navigateByUrl('/').then(() => {})
                 })
             }
-        })
+        })*/
     }
-
-    swapSigninOrSignup() {
-        this.signinOrSignup = this.signinOrSignup == 'Login' ? 'Sign up' : 'Login'
-    }
-
-    async loginOrSignup() {
-        const { email, password } = this.credentials
-        if (this.signinOrSignup == 'Login') {
-            await this.auth.signInWithEmailAndPassword(email, password)
-        } else {
-            const resp = await this.auth.createUserWithEmailAndPassword(email, password)
-            await resp.user.updateProfile({ displayName: this.credentials.displayName })
-        }
-        await this.router.navigateByUrl('/')
+    redirect() {
+        this.router.navigateByUrl('/').then(() => {})
     }
 }

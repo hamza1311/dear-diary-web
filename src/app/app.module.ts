@@ -25,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatExpansionModule } from '@angular/material/expansion'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { AngularFirestoreModule } from '@angular/fire/firestore'
+import {NgxAuthFirebaseUIModule} from "ngx-auth-firebaseui";
 
 @NgModule({
     declarations: [
@@ -56,6 +57,11 @@ import { AngularFirestoreModule } from '@angular/fire/firestore'
         MatDialogModule,
         MatExpansionModule,
         MatSnackBarModule,
+        NgxAuthFirebaseUIModule.forRoot(environment.firebase, () => 'dear_diary', {
+            toastMessageOnAuthSuccess: false,
+            enableEmailVerification: false,
+            guardProtectedRoutesUntilEmailIsVerified: false,
+        })
     ],
     providers: [],
     bootstrap: [AppComponent]

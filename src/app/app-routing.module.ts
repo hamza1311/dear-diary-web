@@ -4,18 +4,20 @@ import { RouterModule, Routes } from '@angular/router'
 import { LoginComponent } from './components/login/login.component'
 import { HomeComponent } from './components/home/home.component'
 import { NewItemComponent } from './components/new-item/new-item.component'
-import { AngularFireAuthGuard } from '@angular/fire/auth-guard'
+import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login'])
+
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AngularFireAuthGuard] },
+    { path: '', component: HomeComponent, ...canActivate(redirectUnauthorizedToLogin) },
     { path: 'login', component: LoginComponent },
     {
-        path: 'item', canActivate: [AngularFireAuthGuard], children: [
+        path: 'item', ...canActivate(redirectUnauthorizedToLogin), children: [
             { path: 'new', component: NewItemComponent },
             { path: 'edit/:id', component: NewItemComponent },
         ]
     },
-    { path: '', pathMatch: 'full', redirectTo: '/login' },
 ]
 
 @NgModule({
