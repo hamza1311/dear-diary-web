@@ -42,15 +42,12 @@ export class DiaryService {
 
     async getItem(id: string): Promise<DiaryItemWithId> {
         const doc = await (await this.getItemsCollectionForCurrentUser()).doc(id).get().toPromise()
-        const data = doc.data()
-        if (!data) {
-            return undefined
-        }
+        const { title, content, createdAt } = doc.data() as any
         return {
             id: doc.id,
-            title: data.title,
-            content: data.content,
-            createdAt: data.createdAt.toDate(),
+            title,
+            content,
+            createdAt: createdAt.toDate(),
         }
     }
 }

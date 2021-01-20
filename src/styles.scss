@@ -18,6 +18,7 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     background: #121212;
     color: #d7d7d7;
+    overflow: hidden;
 }
 
 .unselectable {
@@ -26,6 +27,19 @@ body {
 
 .clickable {
     cursor: pointer;
+}
+
+.fab {
+    position: fixed !important;
+    bottom: 20px;
+    right: 20px;
+
+    width: 50px !important;
+    height: 50px !important;
+}
+
+.mat-button-wrapper {
+    padding: 0 !important;
 }
 
 $app-dark-theme: mat-dark-theme($primary-color, $accent-color);

@@ -7,8 +7,10 @@
 
     <mat-form-field>
         <mat-label>Content</mat-label>
-        <textarea class="item-input" matInput cdkTextareaAutosize [(ngModel)]="item.content"></textarea>
+        <textarea class="item-input" matInput cdkTextareaAutosize cdkAutosizeMinRows="10" cdkAutosizeMaxRows="25" [(ngModel)]="item.content"></textarea>
     </mat-form-field>
 
-    <button mat-raised-button (click)="save()">Save</button>
+    <button mat-mini-fab (click)="save()" class="fab">
+        <mat-icon aria-label="Save">save</mat-icon>
+    </button>
 </section>

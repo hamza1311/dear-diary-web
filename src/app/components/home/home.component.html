@@ -2,7 +2,7 @@
     <section class="home-diary-items">
         <app-show-item-card *ngFor="let item of items | async" class="show-item-card clickable" routerLink="/item/edit/{{item.id}}" [item]="item"></app-show-item-card>
     </section>
-    <button mat-fab id="add-fab">
-        <mat-icon aria-hidden="false" aria-label="New diary item" routerLink="/item/new">add</mat-icon>
+    <button mat-fab class="fab" routerLink="/item/new">
+        <mat-icon aria-hidden="false" aria-label="New diary item">add</mat-icon>
     </button>
 </section>

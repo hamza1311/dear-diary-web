@@ -5,6 +5,14 @@
 
     font-size: 1.2em;
 
+    height: 100%;
+    overflow: auto;
+
+    div {
+        width: 100%;
+        height: available;
+    }
+
     .item-input {
         caret-color: #E9DCDC;
     }
