@@ -6,6 +6,7 @@ import {useItem, useItemsCollection} from "../utils/hooks";
 import BottomFab from "./BottomFab";
 import {useHistory, useParams} from "react-router-dom";
 import firebase from "firebase/app";
+import LoadingIndicator from "./LoadingIndicator";
 
 const useStyles = makeStyles({
     form: {
@@ -23,6 +24,8 @@ export default function Edit() {
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
 
+    const [isSaving, setIsSaving] = useState(false)
+
     const doc = useItem(id)
 
     useEffect(() => {
@@ -39,6 +42,7 @@ export default function Edit() {
 
 
     const save = async () => {
+        setIsSaving(true)
         const item = {
             content,
             title,
@@ -47,10 +51,12 @@ export default function Edit() {
 
         await collection.doc(id).update(item)
         history.push(`/${id}`)
+        setIsSaving(false)
     }
 
     return (
         <main>
+            <LoadingIndicator isVisible={isSaving} />
             <form className={classes.form} noValidate autoComplete="off">
                 <TextField
                     placeholder="Title"

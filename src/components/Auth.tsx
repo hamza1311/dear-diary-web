@@ -5,6 +5,7 @@ import {Button, Card, CardContent, FormControl, IconButton, Input, InputAdornmen
 import {useAuth, useUser} from "reactfire";
 import {Redirect, useHistory} from 'react-router-dom'
 import {Visibility, VisibilityOff} from "@material-ui/icons";
+import LoadingIndicator from "./LoadingIndicator";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,18 +35,21 @@ export const SignIn = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
+    const [signingIn, setSigningIn] = useState(false)
 
     const user = useUser()
 
     const classes = useStyles();
 
     if (user.data) {
-        return <Redirect to="/" />
+        return <Redirect to="/"/>
     }
 
     const signIn = async () => {
+        setSigningIn(true)
         await auth.signInWithEmailAndPassword(email, password)
         history.push("/")
+        setSigningIn(false)
     }
 
     const handleClickShowPassword = () => {
@@ -58,9 +62,10 @@ export const SignIn = () => {
                 label="Email"
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={signingIn}
             />
 
-            <FormControl>
+            <FormControl disabled={signingIn}>
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <Input
                     id="password"
@@ -81,7 +86,11 @@ export const SignIn = () => {
                 />
             </FormControl>
 
-            <Button onClick={signIn} variant="contained" className={classes.signinButton}>Sign in</Button>
+            <Button
+                onClick={signIn}
+                variant="contained"
+                className={classes.signinButton}
+                disabled={signingIn}>Sign in</Button>
         </form>
     )
 
@@ -89,6 +98,7 @@ export const SignIn = () => {
         <main className={classes.root}>
             <div className={classes.wrapper}>
                 <Card>
+                    <LoadingIndicator isVisible={signingIn}/>
                     <CardContent>
                         {form}
                     </CardContent>

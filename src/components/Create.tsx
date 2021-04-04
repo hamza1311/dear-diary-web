@@ -8,6 +8,7 @@ import {useUser} from "reactfire";
 import firebase from "firebase/app";
 import BottomFab from "./BottomFab";
 import {useHistory} from "react-router-dom";
+import LoadingIndicator from "./LoadingIndicator";
 
 const useStyles = makeStyles({
     form: {
@@ -26,11 +27,14 @@ export default function Create() {
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
 
+    const [isSaving, setIsSaving] = useState(false)
+
     const collection = useItemsCollection()
 
     const user = useUser();
 
     const save = async () => {
+        setIsSaving(true)
         const item: Item = {
             author: user.data.uid,
             content: content,
@@ -42,10 +46,12 @@ export default function Create() {
         const ret = await collection.add(item)
 
         history.push(`/${ret.id}`)
+        setIsSaving(false)
     }
 
     return (
         <main>
+            <LoadingIndicator isVisible={isSaving} />
             <form className={classes.form} noValidate autoComplete="off">
                 <TextField
                     placeholder="Title"

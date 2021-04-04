@@ -16,6 +16,7 @@ import BottomFab from "./BottomFab";
 import EditIcon from "@material-ui/icons/Edit";
 import removeMd from 'remove-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import LoadingIndicator from "./LoadingIndicator";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -97,7 +98,7 @@ const ListItems = (props: { uid: string }) => {
 
     switch (resp.status) {
         case "loading":
-            view = <>loading</>
+            view = <LoadingIndicator />
             break
         case "error":
             view = <>Err</>

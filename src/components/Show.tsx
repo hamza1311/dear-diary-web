@@ -9,6 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ReactMarkdown from 'react-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import Person from "@material-ui/icons/Person";
+import LoadingIndicator from "./LoadingIndicator";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -68,7 +69,7 @@ export default function Show() {
 
     switch (status) {
         case "loading":
-            return <>loading</>
+            return <LoadingIndicator />
         case "error":
             return <>Err</>
         case "success":
