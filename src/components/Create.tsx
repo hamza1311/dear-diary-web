@@ -51,20 +51,22 @@ export default function Create() {
 
     return (
         <main>
-            <LoadingIndicator isVisible={isSaving} />
+            <LoadingIndicator isVisible={isSaving}/>
             <form className={classes.form} noValidate autoComplete="off">
                 <TextField
                     placeholder="Title"
+                    disabled={isSaving}
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <TextField
                     placeholder="Content"
                     multiline={true}
+                    disabled={isSaving}
                     rowsMax={6}
                     onChange={(e) => setContent(e.target.value)}
                 />
             </form>
-            <BottomFab onClick={save}>
+            <BottomFab onClick={save} disabled={isSaving}>
                 <SaveIcon/>
             </BottomFab>
         </main>

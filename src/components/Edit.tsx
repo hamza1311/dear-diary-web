@@ -61,6 +61,7 @@ export default function Edit() {
                 <TextField
                     placeholder="Title"
                     value={title}
+                    disabled={isSaving}
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <TextField
@@ -68,10 +69,11 @@ export default function Edit() {
                     multiline={true}
                     rowsMax={6}
                     value={content}
+                    disabled={isSaving}
                     onChange={(e) => setContent(e.target.value)}
                 />
             </form>
-            <BottomFab onClick={save}>
+            <BottomFab onClick={save} disabled={isSaving}>
                 <SaveIcon/>
             </BottomFab>
         </main>
