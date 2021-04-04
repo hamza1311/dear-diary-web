@@ -66,11 +66,6 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "end"
     },
-    /*[theme.breakpoints.down("sm")]: {
-        heading: {
-            flexDirection: "column"
-        }
-    },*/
 }));
 
 export default function Home() {
@@ -91,15 +86,16 @@ const ListItems = (props: { uid: string }) => {
 
     const itemsRef = useItemsCollection()
         .where('author', '==', props.uid)
+        .orderBy('createTime', 'desc')
 
-    const {status, data: items} = useFirestoreCollectionData<ItemWithId>(itemsRef, {
+    const resp = useFirestoreCollectionData<ItemWithId>(itemsRef, {
         idField: 'id'
     })
 
     const contentLength = 255
     let view
 
-    switch (status) {
+    switch (resp.status) {
         case "loading":
             view = <>loading</>
             break
@@ -107,7 +103,7 @@ const ListItems = (props: { uid: string }) => {
             view = <>Err</>
             break
         case "success":
-            const cards = items.map(item => {
+            const cards = resp.data.map(item => {
                 let content = item.content.trim()
                 if (content.length > contentLength) {
                     content = `${content.substr(0, contentLength - 3)}...`
@@ -132,7 +128,8 @@ const ListItems = (props: { uid: string }) => {
 
                                 <div className={classes.timeContainer}>
                                     <Timestamp timestamp={item.createTime.toDate()} icon={AccessTimeIcon}/>
-                                    {item.updateTime && <Timestamp timestamp={item.updateTime.toDate()} icon={EditIcon}/>}
+                                    {item.updateTime &&
+                                    <Timestamp timestamp={item.updateTime.toDate()} icon={EditIcon}/>}
                                 </div>
                             </div>
 
