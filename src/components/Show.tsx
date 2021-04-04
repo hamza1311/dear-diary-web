@@ -42,6 +42,10 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         paddingBottom: theme.spacing(2),
+        overflowWrap: "anywhere",
+        display: "flex",
+        flexDirection: "column",
+        gap: theme.spacing(1),
     },
     authorContainer: {
         display: "flex",

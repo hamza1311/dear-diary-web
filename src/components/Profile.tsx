@@ -11,6 +11,10 @@ import {PasswordField} from "./Auth";
 const useInfoCardStyles = makeStyles(theme => ({
     card: {
         width: '50%',
+        [theme.breakpoints.down("sm")]: {
+            width: '90%',
+            margin: "auto",
+        }
     },
     cardContent: {
         display: "flex",
@@ -99,6 +103,11 @@ const UpdatePhotoButton = () => {
 }
 
 const useChangePasswordStyles = makeStyles(theme => ({
+    root: {
+        [theme.breakpoints.down("sm")]: {
+            marginLeft: "5%",
+        }
+    },
     passwordHeading: {
         marginBottom: theme.spacing(2),
     },
@@ -135,7 +144,7 @@ const ChangePassword = () => {
     }
 
     return (
-        <section>
+        <section className={classes.root}>
             <Typography variant="h5" component="h3" className={classes.passwordHeading}>Password</Typography>
             <Button variant="contained" onClick={showDialog} className={classes.changePasswordButton}>
                 Change Password
@@ -181,12 +190,14 @@ const ChangePassword = () => {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        paddingTop: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
-
         display: "flex",
         flexDirection: "column",
         gap: theme.spacing(2),
+        paddingTop: theme.spacing(2),
+
+        [theme.breakpoints.up("sm")]: {
+            paddingLeft: theme.spacing(2),
+        },
     },
     cardContentInner: {
         display: "flex",
