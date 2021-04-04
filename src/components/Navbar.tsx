@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import {useAuth} from "reactfire";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +32,7 @@ export default function Navbar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
+    const history = useHistory()
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -40,6 +41,11 @@ export default function Navbar() {
     let auth = useAuth()
     const signOut = async () => {
         await auth.signOut()
+        handleClose()
+    }
+
+    const navigateToProfile = async () => {
+        history.push("/profile")
         handleClose()
     }
 
@@ -74,6 +80,7 @@ export default function Navbar() {
                 open={open}
                 onClose={handleClose}
             >
+                <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
                 <MenuItem onClick={signOut}>Sign out</MenuItem>
             </Menu>
         </div>

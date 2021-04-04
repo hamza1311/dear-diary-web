@@ -8,6 +8,7 @@ import Home from "./Home";
 import Create from "./Create";
 import Show from "./Show";
 import Edit from "./Edit";
+import Profile from "./Profile";
 
 export default function Routes() {
     const currentUser = useUser();
@@ -31,6 +32,12 @@ export default function Routes() {
                 </Route>
 
                 <Route
+                    path="/profile"
+                    render={(routeProps) => renderAuthenticated(routeProps, Profile)}
+                />
+
+
+                <Route
                     path="/new"
                     render={(routeProps) => renderAuthenticated(routeProps, Create)}
                 />
@@ -47,6 +54,7 @@ export default function Routes() {
 
                 <Route
                     path="/"
+                    exact={true}
                     render={(routeProps) => renderAuthenticated(routeProps, Home)}
                 />
             </Switch>

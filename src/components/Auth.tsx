@@ -28,13 +28,39 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+export function PasswordField(props: { disabled: boolean, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, label: string }) {
+    const [showPassword, setShowPassword] = useState(false)
+
+    return (
+        <FormControl disabled={props.disabled}>
+            <InputLabel htmlFor="password">{ props.label }</InputLabel>
+            <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={props.value}
+                onChange={props.onChange}
+                endAdornment={
+                    <InputAdornment position="end">
+                        <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowPassword(!showPassword)}
+                            onMouseDown={(e) => e.preventDefault()}
+                        >
+                            {showPassword ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                    </InputAdornment>
+                }
+            />
+        </FormControl>
+    )
+}
+
 export const SignIn = () => {
     const history = useHistory()
 
     const auth = useAuth()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [showPassword, setShowPassword] = useState(false)
     const [signingIn, setSigningIn] = useState(false)
 
     const user = useUser()
@@ -52,10 +78,6 @@ export const SignIn = () => {
         setSigningIn(false)
     }
 
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword)
-    };
-
     const form = (
         <form className={classes.form} noValidate autoComplete="off">
             <TextField
@@ -65,26 +87,12 @@ export const SignIn = () => {
                 disabled={signingIn}
             />
 
-            <FormControl disabled={signingIn}>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={(e) => e.preventDefault()}
-                            >
-                                {showPassword ? <Visibility/> : <VisibilityOff/>}
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                />
-            </FormControl>
+            <PasswordField
+                disabled={signingIn}
+                value={password}
+                label="Password"
+                onChange={(e) => setPassword(e.target.value)}
+            />
 
             <Button
                 onClick={signIn}
