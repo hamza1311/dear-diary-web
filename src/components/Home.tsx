@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef, useState} from "react";
 import {useFirestoreCollectionData, useUser} from "reactfire";
 import {ItemWithId} from "../models/Item";
 import {makeStyles} from '@material-ui/core/styles';
@@ -14,10 +14,12 @@ import {Link, useHistory} from 'react-router-dom'
 import {useItemsCollection} from "../utils/hooks";
 import BottomFab from "./BottomFab";
 import EditIcon from "@material-ui/icons/Edit";
-import ShareIcon from "@material-ui/icons/Share";
 import removeMd from 'remove-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import LoadingIndicator from "./LoadingIndicator";
+import {ScreenShare, StopScreenShare} from "@material-ui/icons";
+import copy from 'copy-to-clipboard';
+import Snackbar from "./Snackbar";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -94,14 +96,18 @@ const ListItems = (props: { uid: string }) => {
     const contentLength = 255
     let view
 
+    const [snackbarOpen, setSnackbarOpen] = useState(false)
+    const snackbarMessage = useRef("");
+
     switch (resp.status) {
         case "loading":
-            view = <LoadingIndicator />
+            view = <LoadingIndicator/>
             break
         case "error":
             view = <>Err</>
             break
         case "success":
+
             const cards = resp.data.map(item => {
                 let content = item.content.trim()
                 if (content.length > contentLength) {
@@ -114,8 +120,15 @@ const ListItems = (props: { uid: string }) => {
                 }
 
                 const onShareClicked = async () => {
-                    // todo flip shared state and copy link to clipboard
-                    await collection.doc(item.id).update('isShared', true)
+                    const newState = !item.isShared
+                    await collection.doc(item.id).update('isShared', newState)
+                    if (newState) {
+                        copy(window.location.href + item.id)
+                        snackbarMessage.current = "Link shared to clipboard"
+                    } else {
+                        snackbarMessage.current = "Stopped sharing"
+                    }
+                    setSnackbarOpen(true)
                 }
 
                 const onEditClicked = () => {
@@ -147,8 +160,7 @@ const ListItems = (props: { uid: string }) => {
                         </CardContent>
                         <CardActions disableSpacing className={classes.actions}>
                             <IconButton aria-label="edit" onClick={onShareClicked}>
-                                {/* todo show disable share button */}
-                                <ShareIcon/>
+                                {item.isShared ? <StopScreenShare/> : <ScreenShare/>}
                             </IconButton>
 
                             <IconButton aria-label="edit" onClick={onEditClicked}>
@@ -163,11 +175,12 @@ const ListItems = (props: { uid: string }) => {
                 )
             })
 
-            view = (
+            view = (<>
                 <section className={classes.cardsContainer}>
                     {cards}
                 </section>
-            )
+                <Snackbar setOpen={setSnackbarOpen} message={snackbarMessage.current} open={snackbarOpen} />
+            </>)
 
             break
     }

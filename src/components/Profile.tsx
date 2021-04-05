@@ -1,4 +1,13 @@
-import {Button, Card, CardContent, IconButton, TextField, Tooltip, Typography} from "@material-ui/core";
+import {
+    Button,
+    Card,
+    CardContent,
+    CircularProgress,
+    IconButton,
+    TextField,
+    Tooltip,
+    Typography
+} from "@material-ui/core";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core"
 import {useUser} from "reactfire";
 import {makeStyles} from "@material-ui/core/styles";
@@ -7,6 +16,9 @@ import React, {useState} from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import {PasswordField} from "./Auth";
+import firebase from "firebase/app";
+import "firebase/auth"
+import Snackbar from "./Snackbar";
 
 const useInfoCardStyles = makeStyles(theme => ({
     card: {
@@ -41,12 +53,16 @@ const useCardActionsStyles = makeStyles(({
 
 interface EditOrSaveButtonProps {
     editing: boolean
+    loading: boolean
     setEditing: (value: boolean) => void
     onSaveClick: () => void
 }
 
-const EditOrSaveButton = ({editing, setEditing, onSaveClick}: EditOrSaveButtonProps) => {
+const EditOrSaveButton = ({editing, loading, setEditing, onSaveClick}: EditOrSaveButtonProps) => {
     const classes = useCardActionsStyles()
+    if (loading) {
+        return <CircularProgress className={classes.cardContentRight} color="secondary"/>
+    }
 
     return editing
         ? <IconButton
@@ -128,6 +144,11 @@ const ChangePassword = () => {
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [oldPassword, setOldPassword] = useState("");
+    const [changingPassword, setChangingPassword] = useState(false);
+    const [error, setError] = useState("")
+    const [snackbarOpen, setSnackbarOpen] = useState(false)
+
+    const user = useUser()
 
     const showDialog = () => {
         setDialogOpen(true);
@@ -138,12 +159,26 @@ const ChangePassword = () => {
     };
 
 
-    const changePassword = () => {
-        // TODO
+    const changePassword = async () => {
+        setChangingPassword(true)
+        if (newPassword !== confirmNewPassword) {
+            setError("passwords do not match")
+        } else {
+            if (user.data.email === null) {
+                throw Error("unreachable")
+            }
+
+            const credential = firebase.auth.EmailAuthProvider.credential(user.data.email, oldPassword)
+            await user.data.reauthenticateWithCredential(credential)
+
+            await user.data.updatePassword(newPassword)
+            setSnackbarOpen(true)
+        }
+        setChangingPassword(false)
         handleClose()
     }
 
-    return (
+    return (<>
         <section className={classes.root}>
             <Typography variant="h5" component="h3" className={classes.passwordHeading}>Password</Typography>
             <Button variant="contained" onClick={showDialog} className={classes.changePasswordButton}>
@@ -155,36 +190,40 @@ const ChangePassword = () => {
 
                 <DialogContent className={classes.dialogContent}>
                     <PasswordField
-                        disabled={false}
+                        disabled={changingPassword}
                         value={oldPassword}
                         label="Old password"
                         onChange={(e) => setOldPassword(e.target.value)}
                     />
 
                     <PasswordField
-                        disabled={false}
+                        disabled={changingPassword}
                         value={newPassword}
                         label="New password"
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
 
                     <PasswordField
-                        disabled={false}
+                        disabled={changingPassword}
                         value={confirmNewPassword}
                         label="Confirm new password"
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
 
-                    <Button className={classes.changePasswordButton}>Reset password</Button>
+                    <Button
+                        className={classes.changePasswordButton}
+                        disabled={changingPassword}
+                    >Reset password</Button>
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={changePassword}>Update</Button>
+                    <Button onClick={handleClose} disabled={changingPassword}>Cancel</Button>
+                    <Button onClick={changePassword} disabled={changingPassword}>Update</Button>
                 </DialogActions>
             </Dialog>
         </section>
-    )
+        <Snackbar message="Password changed successfully" open={snackbarOpen} setOpen={setSnackbarOpen} />
+    </>)
 }
 
 
@@ -220,23 +259,35 @@ const useStyles = makeStyles(theme => ({
 export default function Profile() {
     const classes = useStyles()
 
-    const [editingName, setEditingName] = useState(false)
+    const [editingDisplayName, setEditingDisplayName] = useState(false)
+    const [newDisplayName, setNewDisplayName] = useState("")
+    const [isUpdatingDisplayName, setIsUpdatingDisplayName] = useState(false)
+
     const [editingEmail, setEditingEmail] = useState(false)
+    const [isUpdatingEmail, setIsUpdatingEmail] = useState(false)
+    const [newEmail, setNewEmail] = useState("")
 
     const user = useUser()
 
-    const updateDisplayName = () => {
-        // TODO
-        setEditingName(false)
+    const updateDisplayName = async () => {
+        setIsUpdatingDisplayName(true)
+        await user.data.updateProfile({
+            displayName: newDisplayName
+        })
+        setEditingDisplayName(false)
+        setIsUpdatingDisplayName(false)
     }
 
-    const updateEmail = () => {
-        // TODO
+    const updateEmail = async () => {
+        setIsUpdatingEmail(true)
+        // maybe use verifyBeforeUpdateEmail() ?
+        await user.data.updateEmail(newEmail)
         setEditingEmail(false)
+        setIsUpdatingEmail(false)
     }
 
-    const verifyEmail = () => {
-        // TODO
+    const verifyEmail = async () => {
+        await user.data.sendEmailVerification()
     }
 
     const data = user.data
@@ -252,8 +303,11 @@ export default function Profile() {
         <ProfileInfoCard>
             <article className={classes.cardContentInner}>
                 {
-                    editingName
-                        ? <TextField placeholder="Display Name"/>
+                    editingDisplayName
+                        ? <TextField
+                            placeholder="Display Name"
+                            onChange={(e) => setNewDisplayName(e.currentTarget.value)}
+                        />
                         : <>
                             <Typography variant="h6" component="h3">Display Name</Typography>
                             <Typography variant="body1" component="p">{data.displayName}</Typography>
@@ -261,7 +315,8 @@ export default function Profile() {
                 }
             </article>
 
-            <EditOrSaveButton editing={editingName} setEditing={setEditingName} onSaveClick={updateDisplayName}/>
+            <EditOrSaveButton editing={editingDisplayName} loading={isUpdatingDisplayName}
+                              setEditing={setEditingDisplayName} onSaveClick={updateDisplayName}/>
         </ProfileInfoCard>
 
 
@@ -269,8 +324,11 @@ export default function Profile() {
             <article className={classes.cardContentInner}>
                 {
                     editingEmail
-                        ? <TextField placeholder="Email"/>
-                        : <>
+                        ? <TextField
+                            placeholder="Email"
+                            type="email"
+                            onChange={(e) => setNewEmail(e.currentTarget.value)}
+                        /> : <>
                             <Typography variant="h6" component="h3">Email</Typography>
                             <div className={classes.emailInfoContainer}>
                                 <Typography variant="body1" component="p">{data.email}</Typography>
@@ -284,7 +342,8 @@ export default function Profile() {
                 }
             </article>
 
-            <EditOrSaveButton editing={editingEmail} setEditing={setEditingEmail} onSaveClick={updateEmail}/>
+            <EditOrSaveButton editing={editingEmail} loading={isUpdatingEmail} setEditing={setEditingEmail}
+                              onSaveClick={updateEmail}/>
         </ProfileInfoCard>
 
         <ChangePassword/>

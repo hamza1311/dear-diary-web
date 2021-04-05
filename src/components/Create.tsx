@@ -40,6 +40,7 @@ export default function Create() {
             content: content,
             createTime: firebase.firestore.Timestamp.now(),
             updateTime: null,
+            isShared: false,
             title: title,
         };
 
