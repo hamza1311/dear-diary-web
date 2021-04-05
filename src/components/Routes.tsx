@@ -2,22 +2,30 @@ import React, {Suspense, lazy} from "react"
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 
 import {AuthCheck} from 'reactfire'
-import {SignIn} from "./Auth"
 import 'firebase/auth'
 
-const Navbar = lazy(() => import("./Navbar"))
+import Navbar from './Navbar'
+import LoadingIndicator from "./LoadingIndicator";
+
 const Home = lazy(() => import("./Home"))
 const Create = lazy(() => import("./Create"))
 const Show = lazy(() => import("./Show"))
 const Edit = lazy(() => import("./Edit"))
 const Profile = lazy(() => import("./Profile"))
-const LoadingIndicator = lazy(() => import("./LoadingIndicator"))
+const Auth = lazy(() => import("./Auth"))
+
+const renderFallback = () => (
+    <>
+        <Navbar/>
+        <LoadingIndicator />
+    </>
+)
 
 const AuthWrapper = ({children}: React.PropsWithChildren<{}>): JSX.Element => {
     return (
-        <Suspense fallback={<LoadingIndicator />}>
+        <Suspense fallback={renderFallback()}>
             <AuthCheck fallback={<Redirect to="/login"/>}>
-                <Navbar />
+                <Navbar/>
                 {children}
             </AuthCheck>
         </Suspense>
@@ -27,10 +35,10 @@ const AuthWrapper = ({children}: React.PropsWithChildren<{}>): JSX.Element => {
 export default function Routes() {
     return (
         <Router>
-            <Suspense fallback={<p>Loading...</p>}>
+            <Suspense fallback={renderFallback()}>
                 <Switch>
                     <Route path="/login">
-                        <SignIn/>
+                        <Auth />
                     </Route>
 
                     <Route path="/profile">

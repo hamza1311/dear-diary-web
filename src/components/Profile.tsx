@@ -14,10 +14,10 @@ import {Person, Edit, MoreHoriz, Save, Warning} from "@material-ui/icons";
 import React, {lazy, Suspense, useState} from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import {PasswordField} from "./Auth";
 import firebase from "firebase/app";
 import "firebase/auth"
 import SuspenseFallback from "./SuspenseFallback";
+import {PasswordField} from "./PasswordField";
 
 const Dialog = lazy(() => import("@material-ui/core/Dialog"))
 const DialogActions = lazy(() => import("@material-ui/core/DialogActions"))

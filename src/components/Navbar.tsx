@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {lazy, Suspense} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,10 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import {Link, useHistory} from 'react-router-dom'
 import {useAuth, useUser} from "reactfire";
 import {Button} from "@material-ui/core";
+import SuspenseFallback from "./SuspenseFallback";
+
+const Menu = lazy(() => import('@material-ui/core/Menu'));
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,24 +73,26 @@ export default function Navbar() {
             >
                 <AccountCircle/>
             </IconButton>
-            <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
-                <MenuItem onClick={signOut}>Sign out</MenuItem>
-            </Menu>
+            <Suspense fallback={<SuspenseFallback />}>
+                <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
+                    <MenuItem onClick={signOut}>Sign out</MenuItem>
+                </Menu>
+            </Suspense>
         </div>
     )
 
