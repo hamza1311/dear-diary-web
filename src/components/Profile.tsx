@@ -6,19 +6,25 @@ import {
     IconButton,
     TextField,
     Tooltip,
-    Typography
-} from "@material-ui/core";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core"
+    Typography,
+} from "@material-ui/core/";
 import {useUser} from "reactfire";
 import {makeStyles} from "@material-ui/core/styles";
 import {Person, Edit, MoreHoriz, Save, Warning} from "@material-ui/icons";
-import React, {useState} from "react";
+import React, {lazy, Suspense, useState} from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import {PasswordField} from "./Auth";
 import firebase from "firebase/app";
 import "firebase/auth"
-import Snackbar from "./Snackbar";
+import SuspenseFallback from "./SuspenseFallback";
+
+const Dialog = lazy(() => import("@material-ui/core/Dialog"))
+const DialogActions = lazy(() => import("@material-ui/core/DialogActions"))
+const DialogContent = lazy(() => import("@material-ui/core/DialogContent"))
+const DialogTitle = lazy(() => import("@material-ui/core/DialogTitle"))
+
+const Snackbar = lazy(() => import("./Snackbar"))
 
 const useInfoCardStyles = makeStyles(theme => ({
     card: {
@@ -179,52 +185,55 @@ const ChangePassword = () => {
     }
 
     return (<>
-        <section className={classes.root}>
-            <Typography variant="h5" component="h3" className={classes.passwordHeading}>Password</Typography>
-            <Button variant="contained" onClick={showDialog} className={classes.changePasswordButton}>
-                Change Password
-            </Button>
+        <Suspense fallback={<SuspenseFallback/>}>
+            <section className={classes.root}>
 
-            <Dialog open={dialogOpen} onClose={handleClose} aria-labelledby="change-password-dialog-title">
-                <DialogTitle id="change-password-dialog-title">Change Password</DialogTitle>
+                <Typography variant="h5" component="h3" className={classes.passwordHeading}>Password</Typography>
+                <Button variant="contained" onClick={showDialog} className={classes.changePasswordButton}>
+                    Change Password
+                </Button>
 
-                <DialogContent className={classes.dialogContent}>
-                    <PasswordField
-                        disabled={changingPassword}
-                        value={oldPassword}
-                        label="Old password"
-                        onChange={(e) => setOldPassword(e.target.value)}
-                    />
+                <Dialog open={dialogOpen} onClose={handleClose} aria-labelledby="change-password-dialog-title">
+                    <DialogTitle id="change-password-dialog-title">Change Password</DialogTitle>
 
-                    <PasswordField
-                        disabled={changingPassword}
-                        value={newPassword}
-                        label="New password"
-                        onChange={(e) => setNewPassword(e.target.value)}
-                    />
+                    <DialogContent className={classes.dialogContent}>
+                        <PasswordField
+                            disabled={changingPassword}
+                            value={oldPassword}
+                            label="Old password"
+                            onChange={(e) => setOldPassword(e.target.value)}
+                        />
 
-                    <PasswordField
-                        disabled={changingPassword}
-                        value={confirmNewPassword}
-                        label="Confirm new password"
-                        onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    />
+                        <PasswordField
+                            disabled={changingPassword}
+                            value={newPassword}
+                            label="New password"
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
 
-                    <Button
-                        className={classes.changePasswordButton}
-                        disabled={changingPassword}
-                    >Reset password</Button>
+                        <PasswordField
+                            disabled={changingPassword}
+                            value={confirmNewPassword}
+                            label="Confirm new password"
+                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        />
 
-                    {error && error}
-                </DialogContent>
+                        <Button
+                            className={classes.changePasswordButton}
+                            disabled={changingPassword}
+                        >Reset password</Button>
 
-                <DialogActions>
-                    <Button onClick={handleClose} disabled={changingPassword}>Cancel</Button>
-                    <Button onClick={changePassword} disabled={changingPassword}>Update</Button>
-                </DialogActions>
-            </Dialog>
-        </section>
-        <Snackbar message="Password changed successfully" open={snackbarOpen} setOpen={setSnackbarOpen} />
+                        {error && error}
+                    </DialogContent>
+
+                    <DialogActions>
+                        <Button onClick={handleClose} disabled={changingPassword}>Cancel</Button>
+                        <Button onClick={changePassword} disabled={changingPassword}>Update</Button>
+                    </DialogActions>
+                </Dialog>
+            </section>
+            <Snackbar message="Password changed successfully" open={snackbarOpen} setOpen={setSnackbarOpen}/>
+        </Suspense>
     </>)
 }
 

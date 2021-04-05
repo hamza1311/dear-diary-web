@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, lazy, Suspense} from "react";
 import {useFirestoreCollectionData, useUser} from "reactfire";
 import {ItemWithId} from "../models/Item";
 import {makeStyles} from '@material-ui/core/styles';
@@ -18,8 +18,11 @@ import removeMd from 'remove-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import LoadingIndicator from "./LoadingIndicator";
 import {ScreenShare, StopScreenShare} from "@material-ui/icons";
+
 import copy from 'copy-to-clipboard';
-import Snackbar from "./Snackbar";
+import SuspenseFallback from "./SuspenseFallback";
+
+const Snackbar = lazy(() => import("./Snackbar"))
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -179,7 +182,10 @@ const ListItems = (props: { uid: string }) => {
                 <section className={classes.cardsContainer}>
                     {cards}
                 </section>
-                <Snackbar setOpen={setSnackbarOpen} message={snackbarMessage.current} open={snackbarOpen} />
+                <Suspense fallback={<SuspenseFallback />}>
+                    <Snackbar setOpen={setSnackbarOpen} message={snackbarMessage.current} open={snackbarOpen} />
+                </Suspense>
+
             </>)
 
             break
