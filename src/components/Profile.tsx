@@ -145,7 +145,7 @@ const ChangePassword = () => {
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [oldPassword, setOldPassword] = useState("");
     const [changingPassword, setChangingPassword] = useState(false);
-    const [error, setError] = useState("")
+    const [error, setError] = useState<string | null>(null)
     const [snackbarOpen, setSnackbarOpen] = useState(false)
 
     const user = useUser()
@@ -214,6 +214,8 @@ const ChangePassword = () => {
                         className={classes.changePasswordButton}
                         disabled={changingPassword}
                     >Reset password</Button>
+
+                    {error && error}
                 </DialogContent>
 
                 <DialogActions>
