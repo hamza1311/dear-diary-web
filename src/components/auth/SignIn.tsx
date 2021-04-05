@@ -4,8 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import {Button, Card, CardContent} from "@material-ui/core";
 import {useAuth} from "reactfire";
 import {useHistory} from 'react-router-dom'
-import LoadingIndicator from "./LoadingIndicator";
-import {PasswordField} from "./PasswordField";
+import LoadingIndicator from "../utils/LoadingIndicator";
+import PasswordField from "../utils/PasswordField";
 
 const useStyles = makeStyles((theme) => ({
     root: {

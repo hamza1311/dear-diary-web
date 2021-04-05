@@ -1,38 +1,54 @@
-import React, {Suspense, lazy} from "react"
+import React, {Suspense, lazy, useEffect, useState} from "react"
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 
-import {AuthCheck} from 'reactfire'
+import {useAuth} from 'reactfire'
 import 'firebase/auth'
 
 import Navbar from './Navbar'
-import LoadingIndicator from "./LoadingIndicator";
+import Home from './Home'
+import LoadingIndicator from "./utils/LoadingIndicator";
 
-const Home = lazy(() => import("./Home"))
 const Create = lazy(() => import("./Create"))
 const Show = lazy(() => import("./Show"))
 const Edit = lazy(() => import("./Edit"))
-const Profile = lazy(() => import("./Profile"))
-const Auth = lazy(() => import("./Auth"))
+const Profile = lazy(() => import("./profile/Profile"))
+const Auth = lazy(() => import("./auth/Auth"))
 
 const renderFallback = () => (
     <>
-        <Navbar/>
+        <Navbar asFallback={true} />
         <LoadingIndicator />
     </>
 )
 
-const AuthWrapper = ({children}: React.PropsWithChildren<{}>): JSX.Element => {
-    return (
-        <Suspense fallback={renderFallback()}>
-            <AuthCheck fallback={<Redirect to="/login"/>}>
-                <Navbar/>
-                {children}
-            </AuthCheck>
-        </Suspense>
-    )
-}
-
 export default function Routes() {
+    const [isSignedIn, setIsSignedIn] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const auth = useAuth()
+
+    useEffect(() => {
+        const unsub = auth.onAuthStateChanged((user) => {
+            setIsSignedIn(Boolean(user))
+            setLoading(false)
+        })
+        return unsub
+    }, [auth])
+
+    const AuthWrapper = ({children}: React.PropsWithChildren<{}>): JSX.Element => {
+        if (loading) {
+            return renderFallback()
+        }
+        if (!isSignedIn) {
+            console.log('redirect')
+            return <Redirect to="/login"/>
+        }
+        console.log('fuck')
+        return <>
+            <Navbar/>
+            {children}
+        </>
+    }
+
     return (
         <Router>
             <Suspense fallback={renderFallback()}>

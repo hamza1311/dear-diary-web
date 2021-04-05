@@ -8,21 +8,21 @@ import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
-import {Timestamp} from "./Timestamp";
+import {Timestamp} from "./utils/Timestamp";
 import AddIcon from '@material-ui/icons/Add';
 import {Link, useHistory} from 'react-router-dom'
 import {useItemsCollection} from "../utils/hooks";
-import BottomFab from "./BottomFab";
+import BottomFab from "./utils/BottomFab";
 import EditIcon from "@material-ui/icons/Edit";
 import removeMd from 'remove-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "./utils/LoadingIndicator";
 import {ScreenShare, StopScreenShare} from "@material-ui/icons";
 
 import copy from 'copy-to-clipboard';
-import SuspenseFallback from "./SuspenseFallback";
+import SuspenseFallback from "./utils/SuspenseFallback";
 
-const Snackbar = lazy(() => import("./Snackbar"))
+const Snackbar = lazy(() => import("./utils/Snackbar"))
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -78,18 +78,13 @@ const useStyles = makeStyles(theme => ({
 export default function Home() {
     const user = useUser();
 
-    return <ListItems uid={user.data.uid}/>
-
-}
-
-const ListItems = (props: { uid: string }) => {
     const history = useHistory()
 
     const classes = useStyles();
 
     let collection = useItemsCollection();
     const itemsRef = collection
-        .where('author', '==', props.uid)
+        .where('author', '==', user.data.uid)
         .orderBy('createTime', 'desc')
 
     const resp = useFirestoreCollectionData<ItemWithId>(itemsRef, {
@@ -201,6 +196,5 @@ const ListItems = (props: { uid: string }) => {
             </Link>
         </main>
     )
+
 }
-
-

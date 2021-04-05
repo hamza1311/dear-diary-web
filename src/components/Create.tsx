@@ -6,9 +6,9 @@ import {useItemsCollection} from "../utils/hooks";
 import {Item} from "../models/Item";
 import {useUser} from "reactfire";
 import firebase from "firebase/app";
-import BottomFab from "./BottomFab";
+import BottomFab from "./utils/BottomFab";
 import {useHistory} from "react-router-dom";
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "./utils/LoadingIndicator";
 
 const useStyles = makeStyles({
     form: {

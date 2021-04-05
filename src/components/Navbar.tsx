@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {Link, useHistory} from 'react-router-dom'
 import {useAuth, useUser} from "reactfire";
 import {Button} from "@material-ui/core";
-import SuspenseFallback from "./SuspenseFallback";
+import SuspenseFallback from "./utils/SuspenseFallback";
 
 const Menu = lazy(() => import('@material-ui/core/Menu'));
 
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Navbar() {
+function Navbar({asFallback}: {asFallback: boolean}) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -109,9 +109,14 @@ export default function Navbar() {
                             Dear Diary
                         </Typography>
                     </Link>
-                    {user.data ? authMenu : loginButton}
+                    {(user.data || asFallback) ? authMenu : loginButton}
                 </Toolbar>
             </AppBar>
         </div>
     );
 }
+
+Navbar.defaultProps = {
+    asFallback: false
+}
+export default Navbar

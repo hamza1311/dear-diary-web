@@ -2,14 +2,14 @@ import {useHistory, useParams} from 'react-router-dom'
 import {useIsOnMobile, useItem} from "../utils/hooks";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {Timestamp} from "./Timestamp";
+import {Timestamp} from "./utils/Timestamp";
 import {makeStyles} from "@material-ui/core/styles";
-import BottomFab from "./BottomFab";
+import BottomFab from "./utils/BottomFab";
 import EditIcon from '@material-ui/icons/Edit';
 import ReactMarkdown from 'react-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import Person from "@material-ui/icons/Person";
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "./utils/LoadingIndicator";
 
 const useStyles = makeStyles(theme => ({
     root: {

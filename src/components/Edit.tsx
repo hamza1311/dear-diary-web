@@ -3,10 +3,10 @@ import SaveIcon from "@material-ui/icons/Save";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import {useItem, useItemsCollection} from "../utils/hooks";
-import BottomFab from "./BottomFab";
+import BottomFab from "./utils/BottomFab";
 import {useHistory, useParams} from "react-router-dom";
 import firebase from "firebase/app";
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "./utils/LoadingIndicator";
 
 const useStyles = makeStyles({
     form: {
