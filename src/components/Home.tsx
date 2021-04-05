@@ -10,10 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {Timestamp} from "./Timestamp";
 import AddIcon from '@material-ui/icons/Add';
-import {Link, Redirect, useHistory} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import {useItemsCollection} from "../utils/hooks";
 import BottomFab from "./BottomFab";
 import EditIcon from "@material-ui/icons/Edit";
+import ShareIcon from "@material-ui/icons/Share";
 import removeMd from 'remove-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import LoadingIndicator from "./LoadingIndicator";
@@ -72,11 +73,7 @@ const useStyles = makeStyles(theme => ({
 export default function Home() {
     const user = useUser();
 
-    if (user.data) {
-        return <ListItems uid={user.data.uid}/>
-    } else {
-        return <Redirect to="/login"/>
-    }
+    return <ListItems uid={user.data.uid}/>
 
 }
 
@@ -85,7 +82,8 @@ const ListItems = (props: { uid: string }) => {
 
     const classes = useStyles();
 
-    const itemsRef = useItemsCollection()
+    let collection = useItemsCollection();
+    const itemsRef = collection
         .where('author', '==', props.uid)
         .orderBy('createTime', 'desc')
 
@@ -115,8 +113,17 @@ const ListItems = (props: { uid: string }) => {
                     history.push(`/${item.id}`)
                 }
 
+                const onShareClicked = async () => {
+                    // todo flip shared state and copy link to clipboard
+                    await collection.doc(item.id).update('isShared', true)
+                }
+
                 const onEditClicked = () => {
                     history.push(`/edit/${item.id}`)
+                }
+
+                const onDeleteClicked = async () => {
+                    await collection.doc(item.id).delete()
                 }
 
                 return (
@@ -139,11 +146,16 @@ const ListItems = (props: { uid: string }) => {
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing className={classes.actions}>
+                            <IconButton aria-label="edit" onClick={onShareClicked}>
+                                {/* todo show disable share button */}
+                                <ShareIcon/>
+                            </IconButton>
+
                             <IconButton aria-label="edit" onClick={onEditClicked}>
                                 <EditIcon/>
                             </IconButton>
 
-                            <IconButton aria-label="share">
+                            <IconButton aria-label="share" onClick={onDeleteClicked}>
                                 <DeleteIcon/>
                             </IconButton>
                         </CardActions>

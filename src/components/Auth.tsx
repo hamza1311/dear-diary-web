@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {Button, Card, CardContent, FormControl, IconButton, Input, InputAdornment, InputLabel} from "@material-ui/core";
-import {useAuth, useUser} from "reactfire";
-import {Redirect, useHistory} from 'react-router-dom'
+import {useAuth} from "reactfire";
+import { useHistory} from 'react-router-dom'
 import {Visibility, VisibilityOff} from "@material-ui/icons";
 import LoadingIndicator from "./LoadingIndicator";
 
@@ -63,13 +63,7 @@ export const SignIn = () => {
     const [password, setPassword] = useState("")
     const [signingIn, setSigningIn] = useState(false)
 
-    const user = useUser()
-
     const classes = useStyles();
-
-    if (user.data) {
-        return <Redirect to="/"/>
-    }
 
     const signIn = async () => {
         setSigningIn(true)

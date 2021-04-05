@@ -1,7 +1,7 @@
-import React from "react";
-import {BrowserRouter as Router, Switch, Route, RouteComponentProps, Redirect} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Navbar from "./Navbar";
-import { useUser} from 'reactfire';
+import {useAuth} from 'reactfire';
 import {SignIn} from "./Auth";
 import 'firebase/auth'
 import Home from "./Home";
@@ -9,19 +9,37 @@ import Create from "./Create";
 import Show from "./Show";
 import Edit from "./Edit";
 import Profile from "./Profile";
+import LoadingIndicator from "./LoadingIndicator";
 
 export default function Routes() {
-    const currentUser = useUser();
+    const [isSignedIn, setIsSignedIn] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const auth = useAuth()
 
-    const renderAuthenticated = (props: RouteComponentProps, Comp: React.FunctionComponent) => {
-        if (currentUser.status === "success") {
+    useEffect(() => {
+        const unsub = auth.onAuthStateChanged((user) => {
+            setIsSignedIn(Boolean(user))
+            setLoading(false)
+        })
+        return unsub
+    }, [auth])
+
+    const AuthWrapper = ({children}: React.PropsWithChildren<{}>): JSX.Element => {
+        if (loading) {
             return <>
                 <Navbar/>
-                <Comp />
+                <LoadingIndicator />
             </>
-        } else {
+        }
+        if (!isSignedIn) {
+            console.log('redirect')
             return <Redirect to="/login"/>
         }
+        console.log('fuck')
+        return <>
+            <Navbar/>
+            {children}
+        </>
     }
 
     return (
@@ -31,32 +49,37 @@ export default function Routes() {
                     <SignIn/>
                 </Route>
 
-                <Route
-                    path="/profile"
-                    render={(routeProps) => renderAuthenticated(routeProps, Profile)}
-                />
+                <Route path="/profile">
+                    <AuthWrapper>
+                        <Profile/>
+                    </AuthWrapper>
+                </Route>
 
+                <Route path="/new">
+                    <AuthWrapper>
+                        <Create/>
+                    </AuthWrapper>
+                </Route>
 
-                <Route
-                    path="/new"
-                    render={(routeProps) => renderAuthenticated(routeProps, Create)}
-                />
-
-                <Route
-                    path="/edit/:id"
-                    render={(routeProps) => renderAuthenticated(routeProps, Edit)}
-                />
+                <Route path="/edit/:id">
+                    <AuthWrapper>
+                        <Edit/>
+                    </AuthWrapper>
+                </Route>
 
                 <Route path="/:id">
-                    <Navbar />
-                    <Show />
+                    <Navbar/>
+                    <Show/>
                 </Route>
 
                 <Route
                     path="/"
                     exact={true}
-                    render={(routeProps) => renderAuthenticated(routeProps, Home)}
-                />
+                >
+                    <AuthWrapper>
+                        <Home/>
+                    </AuthWrapper>
+                </Route>
             </Switch>
         </Router>
     );

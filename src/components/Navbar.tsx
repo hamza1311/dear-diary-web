@@ -8,7 +8,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import {Link, useHistory} from 'react-router-dom'
-import {useAuth} from "reactfire";
+import {useAuth, useUser} from "reactfire";
+import {Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     },
     titleContainer: {
         flexGrow: 1,
+
+    },
+    link: {
         color: theme.palette.text.primary,
         textDecoration: 'none',
     },
@@ -40,9 +44,11 @@ export default function Navbar() {
 
     let auth = useAuth()
     const signOut = async () => {
+        history.push("/login")
         await auth.signOut()
-        handleClose()
     }
+
+    const user = useUser()
 
     const navigateToProfile = async () => {
         history.push("/profile")
@@ -86,18 +92,20 @@ export default function Navbar() {
         </div>
     )
 
-    const loginButton = <></>
+    const loginButton = <Link to="/login" className={classes.link}>
+        <Button>Log in</Button>
+    </Link>
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <Link to="/" className={classes.titleContainer}>
+                    <Link to="/" className={`${classes.titleContainer} ${classes.link}`}>
                         <Typography variant="h5" component="h1" className={classes.title}>
                             Dear Diary
                         </Typography>
                     </Link>
-                    {auth ? authMenu : loginButton}
+                    {user.data ? authMenu : loginButton}
                 </Toolbar>
             </AppBar>
         </div>

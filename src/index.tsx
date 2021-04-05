@@ -19,7 +19,6 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig);
 
-
 /*
 const db = app.firestore();
 db.useEmulator("localhost", 8080);
@@ -29,9 +28,6 @@ auth.useEmulator("http://localhost:9099");
 */
 
 ReactDOM.render(
-  // <React.StrictMode>
-  //   <App />
-  // </React.StrictMode>,
     <FirebaseAppProvider firebaseApp={app}>
         <App />
     </FirebaseAppProvider>,
