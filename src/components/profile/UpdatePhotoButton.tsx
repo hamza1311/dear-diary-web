@@ -32,7 +32,7 @@ export default function UpdatePhotoButton() {
         <IconButton className={classes.cardContentRight} onClick={(e) => setAnchorEl(e.currentTarget)}>
             <MoreHoriz/>
         </IconButton>
-        <Suspense fallback={<SuspenseFallback />}>
+        <Suspense fallback={<></>}>
             <Menu
                 anchorOrigin={{
                     vertical: 'top',

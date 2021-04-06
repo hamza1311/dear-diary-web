@@ -105,7 +105,7 @@ export default function Home() {
             view = <>Err</>
             break
         case "success":
-
+            // todo handle state where 0 items are present
             const cards = resp.data.map(item => {
                 let content = item.content.trim()
                 if (content.length > contentLength) {

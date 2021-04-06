@@ -73,7 +73,7 @@ function Navbar({asFallback}: {asFallback: boolean}) {
             >
                 <AccountCircle/>
             </IconButton>
-            <Suspense fallback={<SuspenseFallback />}>
+            <Suspense fallback={<></>}>
                 <Menu
                     id="menu-appbar"
                     anchorEl={anchorEl}
