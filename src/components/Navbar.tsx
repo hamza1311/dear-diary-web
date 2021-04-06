@@ -9,7 +9,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {Link, useHistory} from 'react-router-dom'
 import {useAuth, useUser} from "reactfire";
 import {Button} from "@material-ui/core";
-import SuspenseFallback from "./utils/SuspenseFallback";
 
 const Menu = lazy(() => import('@material-ui/core/Menu'));
 

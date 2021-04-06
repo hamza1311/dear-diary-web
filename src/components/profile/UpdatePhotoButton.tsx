@@ -2,7 +2,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import React, {lazy, useState, Suspense} from "react";
 import {IconButton} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import SuspenseFallback from "../utils/SuspenseFallback";
 
 const Menu = lazy(() => import('@material-ui/core/Menu'));
 const MenuItem = lazy(() => import('@material-ui/core/MenuItem'));
