@@ -16,12 +16,20 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
+    toolbar: {
+        display: "grid",
+        gridTemplateAreas: '"title links user"',
+        gridTemplateColumns: "1fr 3fr 1fr",
+    },
     menuButton: {
         marginRight: theme.spacing(2),
     },
     titleContainer: {
         flexGrow: 1,
-
+        gridArea: "title"
     },
     link: {
         color: theme.palette.text.primary,
@@ -29,6 +37,14 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         fontWeight: 500
+    },
+    linksContainer: {
+        display: "flex",
+        gridArea: "links",
+    },
+    userContainer: {
+        gridArea: "user",
+        justifySelf: "end",
     }
 }));
 
@@ -62,7 +78,7 @@ function Navbar({asFallback}: {asFallback: boolean}) {
     };
 
     const authMenu = (
-        <div>
+        <div className={classes.userContainer}>
             <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -101,13 +117,20 @@ function Navbar({asFallback}: {asFallback: boolean}) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
+            <AppBar position="fixed" className={classes.appBar}>
+                <Toolbar className={classes.toolbar}>
                     <Link to="/" className={`${classes.titleContainer} ${classes.link}`}>
                         <Typography variant="h5" component="h1" className={classes.title}>
                             Dear Diary
                         </Typography>
                     </Link>
+                    <section className={classes.linksContainer}>
+                        <Link to="/quickies" className={classes.link}>
+                            <Button>
+                                Quickies
+                            </Button>
+                        </Link>
+                    </section>
                     {(user.data || asFallback) ? authMenu : loginButton}
                 </Toolbar>
             </AppBar>

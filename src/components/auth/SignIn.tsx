@@ -41,8 +41,8 @@ export default function SignIn() {
     const signIn = async () => {
         setSigningIn(true)
         await auth.signInWithEmailAndPassword(email, password)
-        history.push("/")
         setSigningIn(false)
+        history.push("/")
     }
 
     const form = (

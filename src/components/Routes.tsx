@@ -7,19 +7,30 @@ import 'firebase/auth'
 import Navbar from './Navbar'
 import Home from './Home'
 import LoadingIndicator from "./utils/LoadingIndicator";
+import Toolbar from "@material-ui/core/Toolbar";
 
 const Create = lazy(() => import("./Create"))
 const Show = lazy(() => import("./Show"))
 const Edit = lazy(() => import("./Edit"))
 const Profile = lazy(() => import("./profile/Profile"))
 const Auth = lazy(() => import("./auth/Auth"))
+const Quickies = lazy(() => import("./quickies/Quickies"))
+
+const navbar = (asFallback: boolean = false)  => {
+    return (<>
+        <Navbar asFallback={asFallback}/>
+        <Toolbar/>
+    </>)
+}
+
 
 const renderFallback = () => (
     <>
-        <Navbar asFallback={true} />
+        {navbar(true)}
         <LoadingIndicator />
     </>
 )
+
 
 export default function Routes() {
     const [isSignedIn, setIsSignedIn] = useState(false)
@@ -44,7 +55,7 @@ export default function Routes() {
         }
         console.log('fuck')
         return <>
-            <Navbar/>
+            {navbar()}
             {children}
         </>
     }
@@ -53,6 +64,12 @@ export default function Routes() {
         <Router>
             <Suspense fallback={renderFallback()}>
                 <Switch>
+                    <Route path="/quickies">
+                        <AuthWrapper>
+                            <Quickies/>
+                        </AuthWrapper>
+                    </Route>
+
                     <Route path="/login">
                         <Auth />
                     </Route>
@@ -76,7 +93,7 @@ export default function Routes() {
                     </Route>
 
                     <Route path="/:id">
-                        <Navbar/>
+                        {navbar()}
                         <Show/>
                     </Route>
 

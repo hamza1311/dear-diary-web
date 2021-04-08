@@ -19,13 +19,11 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig);
 
-/*
-const db = app.firestore();
+/*const db = app.firestore();
 db.useEmulator("localhost", 8080);
 
 const auth = app.auth()
-auth.useEmulator("http://localhost:9099");
-*/
+auth.useEmulator("http://localhost:9099");*/
 
 ReactDOM.render(
     <FirebaseAppProvider firebaseApp={app}>
