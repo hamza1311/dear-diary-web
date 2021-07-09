@@ -1,19 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "items",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "author",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createTime",
-          "order": "DESCENDING"
-        }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }
