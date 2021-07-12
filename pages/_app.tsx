@@ -7,7 +7,7 @@ import React, {useMemo} from "react";
 import initAuth from "../utils/initAuth";
 import Navbar from "../components/Navbar";
 import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from '@material-ui/core'
-import {Head} from "next/document";
+import Head from 'next/head'
 
 const firebaseConfig = {
     apiKey: "AIzaSyAJkHSx75YpS8T0NQfrtDtW9BmAXXd2X9I",

@@ -183,7 +183,7 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
             </section>
             <Snackbar setOpen={setSnackbarOpen} message={snackbarMessage.current} open={snackbarOpen}/>
 
-            <Link href="/new">
+            <Link href="/new" passHref>
                 <BottomFab>
                     <AddIcon/>
                 </BottomFab>
