@@ -7,6 +7,7 @@ import React, {useMemo} from "react";
 import initAuth from "../utils/initAuth";
 import Navbar from "../components/Navbar";
 import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from '@material-ui/core'
+import {Head} from "next/document";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAJkHSx75YpS8T0NQfrtDtW9BmAXXd2X9I",
@@ -41,6 +42,9 @@ function MyApp({Component, pageProps}: AppProps) {
 
     return (
         <ThemeProvider theme={theme}>
+            <Head>
+                <title>Dear Diary</title>
+            </Head>
             <CssBaseline />
             <Navbar />
             <Component {...pageProps} />

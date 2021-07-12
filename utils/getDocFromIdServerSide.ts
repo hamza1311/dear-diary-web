@@ -8,7 +8,7 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
     if (id === undefined) {
         return {
             redirect: {
-                destination: '/notfound',
+                destination: '/404',
                 permanent: false,
             }
         }
@@ -24,7 +24,7 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
     if (!doc.exists) {
         return {
             redirect: {
-                destination: '/notfound',
+                destination: '/404',
                 permanent: false,
             }
         }
@@ -51,7 +51,7 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
     } else {
         return {
             redirect: {
-                destination: '/notfound',
+                destination: '/404',
                 permanent: false,
             }
         }
