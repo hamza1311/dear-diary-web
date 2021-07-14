@@ -7,7 +7,10 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
 
     if (id === undefined) {
         return {
-            notFound: true
+            redirect: {
+                destination: '/404',
+                permanent: false,
+            }
         }
     }
 
@@ -20,7 +23,10 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
 
     if (!doc.exists) {
         return {
-            notFound: true
+            redirect: {
+                destination: '/404',
+                permanent: false,
+            }
         }
     }
     const data = doc.data()
