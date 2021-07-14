@@ -3,11 +3,12 @@ import type {AppProps} from 'next/app'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
-import React, {useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import initAuth from "../utils/initAuth";
 import Navbar from "../components/Navbar";
 import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from '@material-ui/core'
 import Head from 'next/head'
+import LoadingIndicator from "../components/LoadingIndicator";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAJkHSx75YpS8T0NQfrtDtW9BmAXXd2X9I",
@@ -27,8 +28,25 @@ if (firebase.apps.length != 1) {
 initAuth()
 
 
-function MyApp({Component, pageProps}: AppProps) {
+function MyApp({Component, pageProps, router}: AppProps) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const handleStart = (url: string) => (url !== router.asPath) && setLoading(true);
+        const handleComplete = (url: string) => (url === router.asPath) && setLoading(false);
+
+        router.events.on('routeChangeStart', handleStart)
+        router.events.on('routeChangeComplete', handleComplete)
+        router.events.on('routeChangeError', handleComplete)
+
+        return () => {
+            router.events.off('routeChangeStart', handleStart)
+            router.events.off('routeChangeComplete', handleComplete)
+            router.events.off('routeChangeError', handleComplete)
+        }
+    })
 
     const theme = useMemo(
         () =>
@@ -47,6 +65,7 @@ function MyApp({Component, pageProps}: AppProps) {
             </Head>
             <CssBaseline />
             <Navbar />
+            {loading && <LoadingIndicator />}
             <Component {...pageProps} />
         </ThemeProvider>
     )

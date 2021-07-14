@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -67,7 +67,6 @@ const useStyles = makeStyles((theme) => ({
 function Navbar() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
-    const iconButtonRef = useRef<HTMLSpanElement | null>(null)
     const open = Boolean(anchorEl);
 
     const router = useRouter()
@@ -75,14 +74,13 @@ function Navbar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    let auth = firebase.auth()
-    const signOut = async () => {
-        await router.push("/auth")
-        await auth.signOut()
-    }
-
     const user = useAuthUser()
+
+    const auth = firebase.auth()
+    const signOut = async () => {
+        await auth.signOut()
+        await router.push("/auth")
+    }
 
     const navigateToProfile = async () => {
         await router.push("/profile")
@@ -90,13 +88,13 @@ function Navbar() {
     }
 
     // @ts-ignore
-    const handleMenu = () => {
-        setAnchorEl(iconButtonRef.current);
+    const handleMenu = (e) => {
+        setAnchorEl(e.currentTarget);
     };
 
     const authMenu = (
         <div className={classes.userContainer}>
-            <span ref={iconButtonRef}>
+            <span>
                 <IconButton
                     aria-label="account of current user"
                     aria-controls="menu-appbar"

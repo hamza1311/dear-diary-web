@@ -1,5 +1,5 @@
 import 'firebase/firestore'
-import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
+import {AuthAction, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {SSRItem, itemFromSSRItem} from "../models/SsrItem";
 import getDocFromIdServerSide from '../utils/getDocFromIdServerSide';
 import {useIsOnMobile} from "../utils/hooks";
@@ -49,6 +49,9 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         gap: theme.spacing(1),
+        '& p': {
+            margin: 0
+        }
     },
     authorContainer: {
         display: "flex",
@@ -69,6 +72,7 @@ function Show(props: { item: SSRItem }) {
     const classes = useStyles()
     const isOnMobile = useIsOnMobile();
     const router = useRouter()
+    const authUser = useAuthUser()
 
     const onEditClicked = async () => {
         await router.push(`/edit/${item.id}`)
@@ -118,22 +122,26 @@ function Show(props: { item: SSRItem }) {
         </section>
     </>)
 
-    return <main className={classes.root}>
-        {view}
-
+    const bottomFab = (
         <BottomFab onClick={onEditClicked}>
             <EditIcon/>
         </BottomFab>
+    )
+
+    return <main className={classes.root}>
+        {view}
+
+        {item.author === authUser.id && bottomFab}
     </main>
 }
 
 export const getServerSideProps = withAuthUserTokenSSR({
-    whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+    whenUnauthed: AuthAction.RENDER,
 })(async (context) => {
     return getDocFromIdServerSide(context)
 })
 
 export default withAuthUser({
-    whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+    whenUnauthedAfterInit: AuthAction.RENDER,
     // @ts-ignore
 })(Show)
