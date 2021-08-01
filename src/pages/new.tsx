@@ -1,14 +1,14 @@
 import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
-import TextField from "@material-ui/core/TextField";
-import SaveIcon from "@material-ui/icons/Save";
 import React, {useState} from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import {Item} from "../models/Item";
-import firebase from "firebase/app";
 import BottomFab from "../components/BottomFab";
 import LoadingIndicator from "../components/LoadingIndicator";
-import 'firebase/firestore'
 import {useRouter} from 'next/router'
+import dynamic from "next/dynamic";
+
+const TextField = dynamic(() => import('@material-ui/core/TextField'))
+const SaveIcon = dynamic(() => import('@material-ui/icons/Save'))
 
 const useStyles = makeStyles({
     form: {
@@ -29,8 +29,6 @@ function New() {
 
     const [isSaving, setIsSaving] = useState(false)
 
-    const firestore = firebase.firestore()
-    const collection = firestore.collection("items")
 
     const user = useAuthUser();
 
@@ -38,6 +36,8 @@ function New() {
         if (user.id === null) {
             throw Error("unreachable")
         }
+        const {default: firebase} = await import('firebase/app')
+
         setIsSaving(true)
         const item: Item = {
             author: user.id,
@@ -47,6 +47,9 @@ function New() {
             isShared: false,
             title: title,
         };
+        await import('firebase/firestore')
+        const firestore = firebase.firestore()
+        const collection = firestore.collection("items")
 
         const ret = await collection.add(item)
 

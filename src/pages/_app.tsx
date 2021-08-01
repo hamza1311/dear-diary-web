@@ -2,10 +2,16 @@ import type {AppProps} from 'next/app'
 import firebase from 'firebase/app'
 import React, {useEffect, useMemo, useState} from "react";
 import initAuth from "../utils/initAuth";
-import Navbar from "../components/Navbar";
 import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from '@material-ui/core'
 import Head from 'next/head'
 import LoadingIndicator from "../components/LoadingIndicator";
+import dynamic from "next/dynamic";
+
+const Navbar = dynamic(
+    () => import("../components/Navbar"),
+    // eslint-disable-next-line react/display-name
+    { loading: () => <LoadingIndicator />, ssr: false }
+)
 
 const firebaseConfig = {
     apiKey: "AIzaSyAJkHSx75YpS8T0NQfrtDtW9BmAXXd2X9I",
@@ -22,7 +28,7 @@ if (firebase.apps.length != 1) {
     firebase.initializeApp(firebaseConfig)
 }
 
-initAuth()
+initAuth().then(() => {})
 
 
 function MyApp({Component, pageProps, router}: AppProps) {
@@ -60,9 +66,9 @@ function MyApp({Component, pageProps, router}: AppProps) {
             <Head>
                 <title>Dear Diary</title>
             </Head>
-            <CssBaseline />
+            <CssBaseline/>
             <Navbar />
-            {loading && <LoadingIndicator />}
+            {loading && <LoadingIndicator/>}
             <Component {...pageProps} />
         </ThemeProvider>
     )

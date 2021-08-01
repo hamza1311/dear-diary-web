@@ -22,7 +22,6 @@ import 'firebase/firestore'
 import Link from 'next/link'
 import {AuthAction, getFirebaseAdmin, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {itemFromSSRItem, SSRItem} from "../models/SsrItem";
-import Navbar from "../components/Navbar";
 
 const useStyles = makeStyles(theme => ({
     root: {},

@@ -1,8 +1,8 @@
 // ./initAuth.js
-import { init } from 'next-firebase-auth'
 
 
-const initAuth = () => {
+const initAuth = async () => {
+    const { init } = await import('next-firebase-auth')
     init({
         authPageURL: '/auth',
         appPageURL: '/',

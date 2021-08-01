@@ -1,4 +1,3 @@
-import 'firebase/firestore'
 import {AuthAction, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {SSRItem, itemFromSSRItem} from "../models/SsrItem";
 import getDocFromIdServerSide from '../utils/getDocFromIdServerSide';
@@ -6,12 +5,12 @@ import {useIsOnMobile} from "../utils/hooks";
 import Typography from "@material-ui/core/Typography";
 import {Timestamp} from "../components/Timestamp";
 import {makeStyles} from "@material-ui/core/styles";
-import BottomFab from "../components/BottomFab";
 import EditIcon from '@material-ui/icons/Edit';
-import ReactMarkdown from 'react-markdown'
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import Person from "@material-ui/icons/Person";
 import {useRouter} from "next/router";
+import {useEffect, useRef} from "react";
+import BottomFab from "../components/BottomFab";
 
 
 const useStyles = makeStyles(theme => ({
@@ -73,7 +72,13 @@ function Show(props: { item: SSRItem }) {
     const isOnMobile = useIsOnMobile();
     const router = useRouter()
     const authUser = useAuthUser()
+    const typographyRef = useRef<any>()
 
+    useEffect(() => {
+        if (typographyRef.current) {
+            typographyRef.current.innerHTML = item.content
+        }
+    })
     const onEditClicked = async () => {
         await router.push(`/edit/${item.id}`)
     }
@@ -94,10 +99,11 @@ function Show(props: { item: SSRItem }) {
             </div>
         </section>
         <section className={classes.right}>
-            <Typography variant="body1" component="article" className={classes.content}>
-                <ReactMarkdown>
-                    {item.content}
-                </ReactMarkdown>
+            <Typography
+                variant="body1"
+                component="article"
+                className={classes.content}
+                innerRef={typographyRef}>
             </Typography>
         </section>
     </>) : (<>
@@ -106,10 +112,11 @@ function Show(props: { item: SSRItem }) {
                 {item.title}
             </Typography>
 
-            <Typography variant="body1" component="article" className={classes.content}>
-                <ReactMarkdown>
-                    {item.content}
-                </ReactMarkdown>
+            <Typography
+                variant="body1"
+                component="article"
+                className={classes.content}
+                innerRef={typographyRef}>
             </Typography>
         </section>
         <section className={classes.right}>
@@ -138,7 +145,14 @@ function Show(props: { item: SSRItem }) {
 export const getServerSideProps = withAuthUserTokenSSR({
     whenUnauthed: AuthAction.RENDER,
 })(async (context) => {
-    return getDocFromIdServerSide(context)
+    const showdown = await import("showdown")
+    const data = await getDocFromIdServerSide(context)
+
+    if (data?.props?.item?.content) {
+        const converter = new showdown.default.Converter()
+        data.props.item.content = converter.makeHtml(data.props.item.content)
+    }
+    return data
 })
 
 export default withAuthUser({

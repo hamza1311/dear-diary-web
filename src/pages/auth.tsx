@@ -6,7 +6,6 @@ import LoadingIndicator from "../components/LoadingIndicator";
 import PasswordField from "../components/PasswordField";
 import {useRouter} from "next/router";
 import firebase from 'firebase/app'
-import 'firebase/auth'
 import {AuthAction, withAuthUser} from "next-firebase-auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 function SignIn() {
     const router = useRouter()
 
-    const auth = firebase.auth()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [signingIn, setSigningIn] = useState(false)
@@ -41,6 +39,8 @@ function SignIn() {
     const classes = useStyles();
 
     const signIn = async () => {
+        await import ('firebase/auth')
+        const auth = firebase.auth()
         setSigningIn(true)
         await auth.signInWithEmailAndPassword(email, password)
         setSigningIn(false)

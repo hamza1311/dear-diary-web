@@ -5,10 +5,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import {Button, Menu, Link} from "@material-ui/core";
+import {Button, Link, Menu, MenuItem} from "@material-ui/core";
 import firebase from 'firebase/app'
-import 'firebase/auth'
 import {useRouter} from "next/router";
 import {useAuthUser} from "next-firebase-auth";
 
@@ -76,8 +74,9 @@ function Navbar() {
     };
     const user = useAuthUser()
 
-    const auth = firebase.auth()
     const signOut = async () => {
+        await import("firebase/auth")
+        const auth = firebase.auth()
         await auth.signOut()
         await router.push("/auth")
     }
@@ -152,10 +151,6 @@ function Navbar() {
         </div>
         <Toolbar/>
     </>);
-}
-
-Navbar.defaultProps = {
-    asFallback: false
 }
 
 export default Navbar

@@ -1,15 +1,16 @@
-import 'firebase/firestore'
 import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {SSRItem, itemFromSSRItem} from "../../models/SsrItem";
 import getDocFromIdServerSide from '../../utils/getDocFromIdServerSide';
-import TextField from "@material-ui/core/TextField";
+// import TextField from "@material-ui/core/TextField";
 import SaveIcon from "@material-ui/icons/Save";
 import React, {useState} from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import BottomFab from "../../components/BottomFab";
-import firebase from "firebase/app";
 import LoadingIndicator from "../../components/LoadingIndicator"
 import {useRouter} from "next/router";
+import dynamic from "next/dynamic";
+
+const TextField = dynamic(() => import('@material-ui/core/TextField'))
 
 const useStyles = makeStyles({
     form: {
@@ -19,7 +20,6 @@ const useStyles = makeStyles({
         padding: "3em",
     }
 })
-
 
 function Edit(props: { item: SSRItem }) {
     const item = itemFromSSRItem(props.item)
@@ -36,6 +36,8 @@ function Edit(props: { item: SSRItem }) {
     const id = item.id
     const save = async () => {
         setIsSaving(true)
+        const {default: firebase} = await import('firebase/app')
+        import('firebase/firestore')
         const item = {
             content,
             title,
@@ -50,7 +52,7 @@ function Edit(props: { item: SSRItem }) {
 
     return (
         <main>
-            <LoadingIndicator isVisible={isSaving} />
+            <LoadingIndicator isVisible={isSaving}/>
             <form className={classes.form} noValidate autoComplete="off">
                 <TextField
                     placeholder="Title"

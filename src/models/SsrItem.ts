@@ -1,5 +1,6 @@
 import {ItemWithId} from "./Item";
 import firebase from "firebase/app";
+import 'firebase/firestore'
 
 export interface SSRItem {
     id: string
