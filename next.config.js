@@ -1,7 +1,11 @@
-module.exports = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+})
+
+module.exports = withBundleAnalyzer({
     reactStrictMode: true,
     target: "serverless",
-    webpack: (config, { isServer }) => {
+    webpack: (config, {isServer}) => {
         // Important: return the modified config
         if (!isServer) {
             config.resolve.fallback.fs = false
@@ -13,4 +17,4 @@ module.exports = {
         }
         return config
     },
-}
+})

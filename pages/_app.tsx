@@ -1,8 +1,6 @@
 import '../styles/globals.css'
 import type {AppProps} from 'next/app'
 import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
 import React, {useEffect, useMemo, useState} from "react";
 import initAuth from "../utils/initAuth";
 import Navbar from "../components/Navbar";

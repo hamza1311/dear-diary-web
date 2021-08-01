@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 import React, {useState} from "react";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import {Button, Dialog, DialogContent, DialogActions, DialogTitle} from "@material-ui/core";
 import PasswordField from "./PasswordField";
 import "firebase/auth"

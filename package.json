@@ -27,6 +27,7 @@
     "retry-request": "^4.2.2"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^11.0.1",
     "@types/react": "17.0.14",
     "@types/remove-markdown": "^0.3.0",
     "eslint": "7.30.0",
