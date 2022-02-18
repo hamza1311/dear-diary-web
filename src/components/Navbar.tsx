@@ -1,15 +1,27 @@
 import React, {useState} from 'react';
 import {AccountCircle} from '@mui/icons-material';
-import {AppBar, Box, Button, IconButton, Link, Menu, MenuItem, Toolbar, Typography, useTheme} from "@mui/material";
+import {
+    AppBar,
+    Box,
+    Button,
+    IconButton,
+    Link,
+    LinkProps,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Typography,
+    useTheme
+} from "@mui/material";
 import {signOut} from '../utils/firebase/auth'
 import {useRouter} from "next/router";
 import {useAuthUser} from "next-firebase-auth";
 
-function RouterLink(props: React.PropsWithChildren<{ href: string, sx?: any }>) {
+function RouterLink(props: React.PropsWithChildren<LinkProps>) {
     const router = useRouter()
     const onClick = async (e: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLSpanElement>) => {
         e.preventDefault()
-        await router.push(props.href)
+        await router.push(props.href ?? '')
     }
 
     return <Link

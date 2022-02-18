@@ -7,7 +7,7 @@ import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
 import {sendEmailVerification, updateEmail, updateProfile} from "@firebase/auth";
 import Navbar from "../../components/Navbar";
 
-const ProfileInfoCard = ({children}: PropsWithChildren<never>) => {
+const ProfileInfoCard = ({children}: PropsWithChildren<unknown>) => {
     return <Card sx={{
         width: '50%',
         sm: {

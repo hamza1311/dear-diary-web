@@ -9,6 +9,8 @@ export default class MyDocument extends Document<{emotionStyleTags: any}> {
         return (
             <Html lang="en">
                 <Head>
+                    {/* TODO title for every page */}
+                    {/* eslint-disable-next-line @next/next/no-title-in-document-head */}
                     <title>Dear Diary</title>
                     <link rel="stylesheet"
                         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>

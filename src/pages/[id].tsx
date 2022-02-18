@@ -59,7 +59,8 @@ const ItemHeading = ({heading}: { heading: string }) => {
     </Typography>
 }
 const ItemContent = ({content}: { content: string }) => {
-    const typographyRef = useRef<HTMLElement | null>()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const typographyRef = useRef<any>()
 
     useEffect(() => {
         if (typographyRef.current) {
