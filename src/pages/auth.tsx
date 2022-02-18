@@ -1,33 +1,11 @@
 import React, {useState} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import {Button, Card, CardContent} from "@material-ui/core";
+import TextField from '@mui/material/TextField';
+import {Box, Button, Card, CardContent} from "@mui/material";
 import LoadingIndicator from "../components/LoadingIndicator";
 import PasswordField from "../components/PasswordField";
 import {useRouter} from "next/router";
 import {AuthAction, withAuthUser} from "next-firebase-auth";
 import {signInWithEmailAndPassword} from "../utils/firebase/auth";
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        height: '100vh',
-        display: 'flex'
-    },
-    wrapper: {
-        margin: "auto",
-        width: '35vw'
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: theme.spacing(4),
-        padding: theme.spacing(3),
-    },
-    signinButton: {
-        width: 'max-content',
-        alignSelf: 'center'
-    }
-}));
 
 function SignIn() {
     const router = useRouter()
@@ -36,7 +14,6 @@ function SignIn() {
     const [password, setPassword] = useState("")
     const [signingIn, setSigningIn] = useState(false)
 
-    const classes = useStyles();
 
     const signIn = async () => {
         setSigningIn(true)
@@ -46,7 +23,12 @@ function SignIn() {
     }
 
     const form = (
-        <form className={classes.form} noValidate autoComplete="off">
+        <Box component='form' sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            padding: 3,
+        }}>
             <TextField
                 label="Email"
                 type="email"
@@ -64,27 +46,32 @@ function SignIn() {
             <Button
                 onClick={signIn}
                 variant="contained"
-                className={classes.signinButton}
+                sx={{width: 'max-content', alignSelf: 'center'}}
                 disabled={signingIn}>Sign in</Button>
-        </form>
+        </Box>
     )
-
     return (
-        <main className={classes.root}>
-            <div className={classes.wrapper}>
+        <Box component='main' sx={{
+            height: '100vh',
+            display: 'flex'
+        }}>
+            <Box sx={{
+                margin: "auto",
+                width: '35vw'
+            }}>
                 <Card>
                     <LoadingIndicator isVisible={signingIn}/>
                     <CardContent>
                         {form}
                     </CardContent>
                 </Card>
-            </div>
-        </main>
+            </Box>
+        </Box>
     )
 }
 
 function Auth() {
-    return <SignIn />
+    return <SignIn/>
 }
 
-export default withAuthUser({ whenAuthed: AuthAction.REDIRECT_TO_APP })(Auth)
+export default withAuthUser({whenAuthed: AuthAction.REDIRECT_TO_APP})(Auth)

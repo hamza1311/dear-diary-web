@@ -2,12 +2,9 @@ import type {AppProps} from 'next/app'
 import { initializeApp } from 'firebase/app'
 import React, {useEffect, useMemo, useState} from "react";
 import initAuth from "../utils/initAuth";
-import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from '@material-ui/core'
+import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from '@mui/material'
 import Head from 'next/head'
 import LoadingIndicator from "../components/LoadingIndicator";
-import Navbar from "../components/Navbar";
-import dynamic from "next/dynamic";
-import {AuthAction, withAuthUser} from "next-firebase-auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAJkHSx75YpS8T0NQfrtDtW9BmAXXd2X9I",
@@ -49,7 +46,7 @@ function MyApp({Component, pageProps, router}: AppProps) {
         () =>
             createTheme({
                 palette: {
-                    type: prefersDarkMode ? 'dark' : 'light',
+                    mode: prefersDarkMode ? 'dark' : 'light',
                 },
             }),
         [prefersDarkMode],

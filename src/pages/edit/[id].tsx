@@ -1,28 +1,15 @@
 import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
-import {SSRItem, itemFromSSRItem} from "../../models/SsrItem";
+import {itemFromSSRItem, SSRItem} from "../../models/SsrItem";
 import getDocFromIdServerSide from '../../utils/getDocFromIdServerSide';
-import SaveIcon from "@material-ui/icons/Save";
+import SaveIcon from "@mui/icons-material/Save";
 import React, {useState} from "react";
-import {makeStyles} from '@material-ui/core/styles';
 import BottomFab from "../../components/BottomFab";
+import Navbar from "../../components/Navbar";
 import LoadingIndicator from "../../components/LoadingIndicator"
 import {useRouter} from "next/router";
-import dynamic from "next/dynamic";
-import {serverTimestamp} from "@firebase/firestore";
-import {doc, updateDoc} from "firebase/firestore";
+import {doc, serverTimestamp, updateDoc} from "firebase/firestore";
 import {collection} from "../../utils/firebase/firestore";
-import Navbar from "../../components/Navbar";
-
-const TextField = dynamic(() => import('@material-ui/core/TextField'))
-
-const useStyles = makeStyles({
-    form: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "2em",
-        padding: "3em",
-    }
-})
+import {Box, TextField} from "@mui/material/";
 
 function Edit(props: { item: SSRItem }) {
     const item = itemFromSSRItem(props.item)
@@ -31,8 +18,6 @@ function Edit(props: { item: SSRItem }) {
     const [content, setContent] = useState(item.content)
 
     const [isSaving, setIsSaving] = useState(false)
-
-    const classes = useStyles();
 
     const router = useRouter()
 
@@ -51,29 +36,35 @@ function Edit(props: { item: SSRItem }) {
     }
 
     return (
-        <><Navbar />
-        <main>
-            <LoadingIndicator isVisible={isSaving}/>
-            <form className={classes.form} noValidate autoComplete="off">
-                <TextField
-                    placeholder="Title"
-                    value={title}
-                    disabled={isSaving}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <TextField
-                    placeholder="Content"
-                    multiline={true}
-                    maxRows={6}
-                    value={content}
-                    disabled={isSaving}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-            </form>
-            <BottomFab onClick={save} disabled={isSaving}>
-                <SaveIcon/>
-            </BottomFab>
-        </main>
+        <>
+            <Navbar/>
+            <main>
+                <LoadingIndicator isVisible={isSaving}/>
+                <Box component="form" sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2em",
+                    padding: "3em"
+                }} noValidate autoComplete="off">
+                    <TextField
+                        placeholder="Title"
+                        value={title}
+                        disabled={isSaving}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <TextField
+                        placeholder="Content"
+                        multiline={true}
+                        maxRows={6}
+                        value={content}
+                        disabled={isSaving}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                </Box>
+                <BottomFab onClick={save} disabled={isSaving}>
+                    <SaveIcon/>
+                </BottomFab>
+            </main>
         </>
     )
 }

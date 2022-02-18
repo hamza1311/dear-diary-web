@@ -1,18 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
 import React, {useState} from "react";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
-
-
-const useStyles = makeStyles(({
-    cardContentRight: {
-        marginLeft: "auto",
-    },
-}))
-
+import {IconButton, Menu, MenuItem} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 
 export default function UpdatePhotoButton() {
-    const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState<EventTarget & HTMLButtonElement | null>(null)
     const open = Boolean(anchorEl)
 
@@ -26,7 +16,7 @@ export default function UpdatePhotoButton() {
     }
 
     return (<>
-        <IconButton className={classes.cardContentRight} onClick={(e) => setAnchorEl(e.currentTarget)}>
+        <IconButton sx={{marginLeft: "auto"}} onClick={(e) => setAnchorEl(e.currentTarget)}>
             <MoreHoriz/>
         </IconButton>
         <Menu
