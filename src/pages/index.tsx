@@ -17,12 +17,12 @@ import {ScreenShare, StopScreenShare} from "@material-ui/icons";
 import copy from 'copy-to-clipboard';
 import {useRouter} from "next/router";
 import Snackbar from "../components/Snackbar";
-import firebase from "firebase/app";
-import 'firebase/firestore'
 import Link from 'next/link'
 import {AuthAction, getFirebaseAdmin, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {itemFromSSRItem, SSRItem} from "../models/SsrItem";
-
+import {collection} from "../utils/firebase/firestore";
+import {onSnapshot, query, where, orderBy, doc, deleteDoc, updateDoc} from 'firebase/firestore'
+import Navbar from "../components/Navbar";
 const useStyles = makeStyles(theme => ({
     root: {},
     cardsContainer: {
@@ -80,17 +80,13 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
     const router = useRouter()
 
     const classes = useStyles();
-
-    let firestore = firebase.firestore();
-    let collection = firestore.collection("items")
+    const itemsCollection = collection("items")
 
     const [items, setItems] = useState<ItemWithId[]>(initialItems.map(itemFromSSRItem))
     const uid = user.id ?? ""
     useEffect(() => {
-        return collection
-            .where('author', '==', uid)
-            .orderBy('createTime', 'desc')
-            .onSnapshot((snapshot) => {
+        const q = query(itemsCollection, where('author', '==', uid), orderBy('createTime', 'desc'))
+        return onSnapshot(q, (snapshot) => {
                 const docs = snapshot.docs.map(it => {
                     const data = it.data()
                     return {
@@ -119,9 +115,9 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
         }
 
         const onShareClicked = async () => {
-            const newState = !item.isShared
-            await collection.doc(item.id).update('isShared', newState)
-            if (newState) {
+            const isShared = !item.isShared
+            await updateDoc(doc(itemsCollection, item.id), {isShared})
+            if (isShared) {
                 copy(window.location.href + item.id)
                 snackbarMessage.current = "Link shared to clipboard"
             } else {
@@ -135,7 +131,7 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
         }
 
         const onDeleteClicked = async () => {
-            await collection.doc(item.id).delete()
+            await deleteDoc(doc(itemsCollection, item.id))
         }
 
         return (
@@ -176,6 +172,7 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
 
 
     return (<>
+        <Navbar />
         <main className={classes.root}>
             <section className={classes.cardsContainer}>
                 {cards}

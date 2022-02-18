@@ -9,8 +9,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import Person from "@material-ui/icons/Person";
 import {useRouter} from "next/router";
-import {useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import BottomFab from "../components/BottomFab";
+import Navbar from "../components/Navbar";
 
 
 const useStyles = makeStyles(theme => ({
@@ -135,11 +136,15 @@ function Show(props: { item: SSRItem }) {
         </BottomFab>
     )
 
-    return <main className={classes.root}>
+    return
+    <>
+        <Navbar />
+        <main className={classes.root}>
         {view}
 
         {item.author === authUser.id && bottomFab}
     </main>
+        </>
 }
 
 export const getServerSideProps = withAuthUserTokenSSR({

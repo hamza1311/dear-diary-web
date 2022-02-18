@@ -1,9 +1,8 @@
 import {makeStyles} from "@material-ui/core/styles";
 import React, {useState} from "react";
-import firebase from "firebase/app";
 import {Button, Dialog, DialogContent, DialogActions, DialogTitle} from "@material-ui/core";
 import PasswordField from "./PasswordField";
-import "firebase/auth"
+import {EmailAuthProvider, reauthenticateWithCredential, updatePassword} from "firebase/auth"
 import {useAuthUser} from "next-firebase-auth";
 import Snackbar from "./Snackbar";
 
@@ -27,10 +26,8 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function ChangePassword({
-                                           dialogOpen,
-                                           setDialogOpen
-                                       }: { dialogOpen: boolean, setDialogOpen: (value: boolean) => void }) {
+type Props = { dialogOpen: boolean, setDialogOpen: (value: boolean) => void }
+export default function ChangePassword({dialogOpen, setDialogOpen}: Props) {
     const classes = useStyles()
 
     const [newPassword, setNewPassword] = useState("");
@@ -62,10 +59,10 @@ export default function ChangePassword({
                 throw Error("unreachable")
             }
 
-            const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword)
-            await user.reauthenticateWithCredential(credential)
+            const credential = EmailAuthProvider.credential(user.email, oldPassword)
+            await reauthenticateWithCredential(user, credential)
 
-            await user.updatePassword(newPassword)
+            await updatePassword(user, newPassword)
             setSnackbarOpen(true)
         }
         setChangingPassword(false)

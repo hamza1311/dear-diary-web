@@ -6,6 +6,9 @@ import BottomFab from "../components/BottomFab";
 import LoadingIndicator from "../components/LoadingIndicator";
 import {useRouter} from 'next/router'
 import dynamic from "next/dynamic";
+import {addDoc, serverTimestamp} from "@firebase/firestore";
+import {collection} from "../utils/firebase/firestore";
+import Navbar from "../components/Navbar";
 
 const TextField = dynamic(() => import('@material-ui/core/TextField'))
 const SaveIcon = dynamic(() => import('@material-ui/icons/Save'))
@@ -36,28 +39,26 @@ function New() {
         if (user.id === null) {
             throw Error("unreachable")
         }
-        const {default: firebase} = await import('firebase/app')
 
         setIsSaving(true)
         const item: Item = {
             author: user.id,
             content: content,
-            createTime: firebase.firestore.Timestamp.now(),
+            createTime: serverTimestamp(),
             updateTime: null,
             isShared: false,
             title: title,
         };
-        await import('firebase/firestore')
-        const firestore = firebase.firestore()
-        const collection = firestore.collection("items")
 
-        const ret = await collection.add(item)
+        const ret = await addDoc(collection("items"), item)
 
         await router.push(`/${ret.id}`)
         setIsSaving(false)
     }
 
     return (
+        <>            <Navbar />
+
         <main>
             <LoadingIndicator isVisible={isSaving}/>
             <form className={classes.form} noValidate autoComplete="off">
@@ -77,6 +78,7 @@ function New() {
                 <SaveIcon/>
             </BottomFab>
         </main>
+        </>
     )
 }
 

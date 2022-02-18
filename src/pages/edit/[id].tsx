@@ -1,7 +1,6 @@
 import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {SSRItem, itemFromSSRItem} from "../../models/SsrItem";
 import getDocFromIdServerSide from '../../utils/getDocFromIdServerSide';
-// import TextField from "@material-ui/core/TextField";
 import SaveIcon from "@material-ui/icons/Save";
 import React, {useState} from "react";
 import {makeStyles} from '@material-ui/core/styles';
@@ -9,6 +8,10 @@ import BottomFab from "../../components/BottomFab";
 import LoadingIndicator from "../../components/LoadingIndicator"
 import {useRouter} from "next/router";
 import dynamic from "next/dynamic";
+import {serverTimestamp} from "@firebase/firestore";
+import {doc, updateDoc} from "firebase/firestore";
+import {collection} from "../../utils/firebase/firestore";
+import Navbar from "../../components/Navbar";
 
 const TextField = dynamic(() => import('@material-ui/core/TextField'))
 
@@ -36,21 +39,19 @@ function Edit(props: { item: SSRItem }) {
     const id = item.id
     const save = async () => {
         setIsSaving(true)
-        const {default: firebase} = await import('firebase/app')
-        import('firebase/firestore')
         const item = {
             content,
             title,
-            updateTime: firebase.firestore.Timestamp.now(),
+            updateTime: serverTimestamp(),
         };
 
-        const firestore = firebase.firestore()
-        await firestore.collection("items").doc(id).update(item)
+        await updateDoc(doc(collection("items"), id), item)
         await router.push(`/${id}`)
         setIsSaving(false)
     }
 
     return (
+        <><Navbar />
         <main>
             <LoadingIndicator isVisible={isSaving}/>
             <form className={classes.form} noValidate autoComplete="off">
@@ -73,6 +74,7 @@ function Edit(props: { item: SSRItem }) {
                 <SaveIcon/>
             </BottomFab>
         </main>
+        </>
     )
 }
 

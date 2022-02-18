@@ -5,8 +5,8 @@ import {Button, Card, CardContent} from "@material-ui/core";
 import LoadingIndicator from "../components/LoadingIndicator";
 import PasswordField from "../components/PasswordField";
 import {useRouter} from "next/router";
-import firebase from 'firebase/app'
 import {AuthAction, withAuthUser} from "next-firebase-auth";
+import {signInWithEmailAndPassword} from "../utils/firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,10 +39,8 @@ function SignIn() {
     const classes = useStyles();
 
     const signIn = async () => {
-        await import ('firebase/auth')
-        const auth = firebase.auth()
         setSigningIn(true)
-        await auth.signInWithEmailAndPassword(email, password)
+        await signInWithEmailAndPassword(email, password)
         setSigningIn(false)
         await router.push("/")
     }

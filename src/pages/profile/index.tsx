@@ -14,6 +14,8 @@ import React, {useState} from "react";
 import ChangePassword from '../../components/ChangePassword'
 import UpdatePhotoButton from '../../components/UpdatePhotoButton'
 import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
+import {updateProfile, updateEmail, sendEmailVerification} from "@firebase/auth";
+import Navbar from "../../components/Navbar";
 
 const useInfoCardStyles = makeStyles(theme => ({
     card: {
@@ -131,27 +133,29 @@ function Profile() {
 
     const updateDisplayName = async () => {
         setIsUpdatingDisplayName(true)
-        await user.updateProfile({
+        await updateProfile(user, {
             displayName: newDisplayName
         })
         setEditingDisplayName(false)
         setIsUpdatingDisplayName(false)
     }
 
-    const updateEmail = async () => {
+    const onUpdateEmailClick = async () => {
         setIsUpdatingEmail(true)
         // maybe use verifyBeforeUpdateEmail() ?
-        await user.updateEmail(newEmail)
+        await updateEmail(user, newEmail)
         setEditingEmail(false)
         setIsUpdatingEmail(false)
     }
 
     const verifyEmail = async () => {
-        await user.sendEmailVerification()
+        await sendEmailVerification(user)
     }
 
     const pfp = user.photoURL ? <></> : <Person className={classes.pfp}/>
-    return (<main className={classes.root}>
+    return (
+        <><Navbar />
+        <main className={classes.root}>
         <ProfileInfoCard>
             {pfp}
             <Typography variant="h5" component="p">{user.displayName}</Typography>
@@ -205,7 +209,7 @@ function Profile() {
                 editing={editingEmail}
                 loading={isUpdatingEmail}
                 setEditing={setEditingEmail}
-                onSaveClick={updateEmail}
+                onSaveClick={onUpdateEmailClick}
             />
         </ProfileInfoCard>
 
@@ -218,7 +222,7 @@ function Profile() {
         </section>
 
         <ChangePassword dialogOpen={passwordDialogOpen} setDialogOpen={setPasswordDialogOpen}/>
-    </main>)
+    </main> </>)
 }
 
 

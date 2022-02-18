@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import {Button, Link, Menu, MenuItem} from "@material-ui/core";
-import firebase from 'firebase/app'
+import { signOut } from 'firebase/auth'
 import {useRouter} from "next/router";
 import {useAuthUser} from "next-firebase-auth";
 
@@ -34,9 +34,8 @@ const useStyles = makeStyles((theme) => ({
         zIndex: theme.zIndex.drawer + 1,
     },
     toolbar: {
-        display: "grid",
-        gridTemplateAreas: '"title links user"',
-        gridTemplateColumns: "1fr 3fr 1fr",
+        display: "flex",
+        justifyItems: 'space-between',
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -72,12 +71,9 @@ function Navbar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const user = useAuthUser()
-
+    const {user} = useAuthUser()
     const signOut = async () => {
-        await import("firebase/auth")
-        const auth = firebase.auth()
-        await auth.signOut()
+        await signOut()
         await router.push("/auth")
     }
 
@@ -138,14 +134,7 @@ function Navbar() {
                             Dear Diary
                         </Typography>
                     </RouterLink>
-                    <section className={classes.linksContainer}>
-                        <RouterLink href="/quickies" className={classes.link}>
-                            <Button>
-                                Quickies
-                            </Button>
-                        </RouterLink>
-                    </section>
-                    {user.firebaseUser ? loginButton : authMenu}
+                    {user ? loginButton : authMenu}
                 </Toolbar>
             </AppBar>
         </div>
