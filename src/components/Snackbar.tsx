@@ -16,7 +16,7 @@ function SimpleSnackbar(props: Props) {
         props.setOpen(false)
     }
 
-    const onSnackbarClose = (e: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
+    const onSnackbarClose = (e: React.SyntheticEvent | Event, reason: SnackbarCloseReason) => {
         if (reason === "clickaway") {
             return
         }

@@ -7,7 +7,7 @@ import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
 import {sendEmailVerification, updateEmail, updateProfile} from "@firebase/auth";
 import Navbar from "../../components/Navbar";
 
-const ProfileInfoCard = ({children}: PropsWithChildren<{}>) => {
+const ProfileInfoCard = ({children}: PropsWithChildren<never>) => {
     return <Card sx={{
         width: '50%',
         sm: {
@@ -136,7 +136,7 @@ function Profile() {
                     </ProfileInfoCardInner>
 
                     <EditOrSaveButton editing={editingDisplayName} loading={isUpdatingDisplayName}
-                                      setEditing={setEditingDisplayName} onSaveClick={updateDisplayName}/>
+                        setEditing={setEditingDisplayName} onSaveClick={updateDisplayName}/>
                 </ProfileInfoCard>
 
 
@@ -173,7 +173,7 @@ function Profile() {
                 <section>
                     <Typography variant="h5" component="h3" sx={{p: 2}}>Password</Typography>
                     <Button variant="contained" onClick={() => setPasswordDialogOpen(true)}
-                            sx={{width: 'max-content'}}>
+                        sx={{width: 'max-content'}}>
                         Change Password
                     </Button>
                 </section>

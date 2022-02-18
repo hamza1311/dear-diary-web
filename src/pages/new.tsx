@@ -1,7 +1,6 @@
 import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
 import React, {useState} from "react";
 import {Box, TextField} from '@mui/material';
-import {Item} from "../models/Item";
 import BottomFab from "../components/BottomFab";
 import LoadingIndicator from "../components/LoadingIndicator";
 import {useRouter} from 'next/router'

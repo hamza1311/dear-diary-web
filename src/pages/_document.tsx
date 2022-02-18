@@ -3,22 +3,23 @@ import Document, {Head, Html, Main, NextScript} from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
 import createEmotionCache from '../utils/createEmotionCache';
 
-export default class MyDocument extends Document {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default class MyDocument extends Document<{emotionStyleTags: any}> {
     render() {
         return (
             <Html lang="en">
                 <Head>
                     <title>Dear Diary</title>
                     <link rel="stylesheet"
-                          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
                     <link rel="icon" href="/favicon.png"/>
 
                     {/* Inject MUI styles first to match with the prepend: true configuration. */}
-                    {(this.props as any).emotionStyleTags}
+                    {this.props.emotionStyleTags}
                 </Head>
                 <body>
-                <Main/>
-                <NextScript/>
+                    <Main/>
+                    <NextScript/>
                 </body>
             </Html>
         );
@@ -59,6 +60,7 @@ MyDocument.getInitialProps = async (ctx) => {
 
     ctx.renderPage = () =>
         originalRenderPage({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             enhanceApp: (App: any) =>
                 function EnhanceApp(props) {
                     return <App emotionCache={cache} {...props} />;

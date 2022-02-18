@@ -19,7 +19,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig)
 
-initAuth().then(() => {})
+initAuth()
 
 
 function MyApp({Component, pageProps, router}: AppProps) {
@@ -43,12 +43,11 @@ function MyApp({Component, pageProps, router}: AppProps) {
     })
 
     const theme = useMemo(
-        () =>
-            createTheme({
-                palette: {
-                    mode: prefersDarkMode ? 'dark' : 'light',
-                },
-            }),
+        () => createTheme({
+            palette: {
+                mode: prefersDarkMode ? 'dark' : 'light',
+            },
+        }),
         [prefersDarkMode],
     );
 

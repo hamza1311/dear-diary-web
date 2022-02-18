@@ -59,7 +59,7 @@ const ItemHeading = ({heading}: { heading: string }) => {
     </Typography>
 }
 const ItemContent = ({content}: { content: string }) => {
-    const typographyRef = useRef<any>()
+    const typographyRef = useRef<HTMLElement | null>()
 
     useEffect(() => {
         if (typographyRef.current) {
