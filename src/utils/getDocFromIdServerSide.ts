@@ -32,6 +32,9 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
     const data = doc.data()
     // @ts-ignore
     const {updateTime, createTime, isShared, title, author, content} = data;
+
+    const fetchedAuthor = await firestore.collection("users").doc(author).get()
+
     const item = {
         id: doc.id,
         content: content,
@@ -39,7 +42,7 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
         isShared: isShared,
         title: title,
         updateTime: updateTime?.toDate()?.toISOString() ?? null,
-        author: author,
+        author: fetchedAuthor.data()?.displayName,
     } as SSRItem
 
     if (item.author === context.AuthUser.id || item.isShared) {

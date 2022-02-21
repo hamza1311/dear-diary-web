@@ -6,16 +6,11 @@ interface Props {
     message: string,
     action?: React.ReactNode
     open: boolean
-    setOpen: (value: boolean) => void
+    closeSnackbar: () => void
     onSnackbarClose?: (reason: SnackbarCloseReason) => void
 }
 
 function SimpleSnackbar(props: Props) {
-
-    const closeSnackbar = () => {
-        props.setOpen(false)
-    }
-
     const onSnackbarClose = (e: React.SyntheticEvent | Event, reason: SnackbarCloseReason) => {
         if (reason === "clickaway") {
             return
@@ -24,7 +19,7 @@ function SimpleSnackbar(props: Props) {
         if (props.onSnackbarClose) {
             props.onSnackbarClose(reason)
         }
-        closeSnackbar()
+        props.closeSnackbar()
     }
 
     return (
@@ -41,7 +36,7 @@ function SimpleSnackbar(props: Props) {
                 action={<>
                     {props.action}
 
-                    <IconButton size="small" aria-label="close" color="inherit" onClick={closeSnackbar}>
+                    <IconButton size="small" aria-label="close" color="inherit" onClick={props.closeSnackbar}>
                         <CloseIcon fontSize="small"/>
                     </IconButton>
                 </>}

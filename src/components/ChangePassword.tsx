@@ -93,6 +93,6 @@ export default function ChangePassword({dialogOpen, setDialogOpen}: Props) {
                 </DialogActions>
             </Dialog>
         </Box>
-        <Snackbar message="Password changed successfully" open={snackbarOpen} setOpen={setSnackbarOpen}/>
+        <Snackbar message="Password changed successfully" open={snackbarOpen} closeSnackbar={() => setSnackbarOpen(false)}/>
     </>)
 }

@@ -1,6 +1,7 @@
 import React, {ElementType} from "react";
 import {isToday, isYesterday, isThisWeek, isThisYear, getDate, getYear, format} from 'date-fns'
 import {Typography, Box} from "@mui/material/";
+import {useIsOnMobile} from "../utils/hooks";
 
 const formatTime = (date: Date): string => {
     const isCurrentWeek = isThisWeek(date)
@@ -29,13 +30,19 @@ const formatTime = (date: Date): string => {
 }
 
 export const Timestamp = ({timestamp, icon: Icon}: { timestamp: Date, icon: ElementType }) => {
+    const isOnMobile = useIsOnMobile();
+    const variant = isOnMobile ? "subtitle2" : "subtitle1";
+
     return <Box sx={{
         display: "flex",
         alignItems: "center",
-        gap: 1
+        gap: 1,
+        width: {
+            sm: 'max-content'
+        }
     }}>
         <Icon />
-        <Typography variant="subtitle2" component="span">{formatTime(timestamp)}</Typography>
+        <Typography variant={variant} component="span">{formatTime(timestamp)}</Typography>
     </Box>
 }
 

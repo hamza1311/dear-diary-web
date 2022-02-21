@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ItemWithId} from "../models/Item";
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -47,12 +47,11 @@ const TimestampContainer = styled(MuiCardActions)(({theme}) => ({
     display: "flex",
     gap: '0.5em',
     [theme.breakpoints.down("sm")]: {
-        padding: "0.8em 0"
+        padding: theme.spacing(1, 0)
     },
-    [theme.breakpoints.up("lg")]: {
-        marginLeft: "auto",
+    [theme.breakpoints.up("sm")]: {
         flexDirection: "column",
-        gap: '0.75em',
+        gap: theme.spacing(1),
     },
 }))
 
@@ -77,18 +76,15 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
             })
             setItems(docs)
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [uid])
+    }, [itemsCollection, uid])
     const contentLength = 255
-
-    const [snackbarOpen, setSnackbarOpen] = useState(false)
-    const snackbarMessage = useRef("");
-
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const closeSnackbar = () => setSnackbarMessage("");
 
     const cards = items.map(item => {
         let content = item.content.trim()
         if (content.length > contentLength) {
-            content = `${content.substr(0, contentLength - 3)}...`
+            content = `${content.slice(0, contentLength - 3)}...`
         }
         content = removeMd(content)
 
@@ -101,11 +97,10 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
             await updateDoc(doc(itemsCollection, item.id), {isShared})
             if (isShared) {
                 copy(window.location.href + item.id)
-                snackbarMessage.current = "Link shared to clipboard"
+                setSnackbarMessage("Link shared to clipboard")
             } else {
-                snackbarMessage.current = "Stopped sharing"
+                setSnackbarMessage("Stopped sharing")
             }
-            setSnackbarOpen(true)
         }
 
         const onEditClicked = async () => {
@@ -121,8 +116,8 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
                 <CardContent onClick={onCardClick}>
                     <Box sx={{
                         display: "flex",
-                        sm: {flexDirection: "column"},
-                        lg: {alignItems: "center"},
+                        alignItems: "center",
+                        justifyContent: "space-between"
                     }}>
                         <Typography variant="h5" component="h2">
                             {item.title}
@@ -168,7 +163,7 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
             }}>
                 {cards}
             </Box>
-            <Snackbar setOpen={setSnackbarOpen} message={snackbarMessage.current} open={snackbarOpen}/>
+            <Snackbar closeSnackbar={closeSnackbar} message={snackbarMessage} open={snackbarMessage !== ''}/>
 
             <Link href="/new" passHref>
                 <BottomFab>

@@ -10,11 +10,21 @@ import BottomFab from "../components/BottomFab";
 import Navbar from "../components/Navbar";
 import {Box, styled, Typography} from "@mui/material/";
 
+const RootContainer = styled(Box)(({theme}) => ({
+    padding: theme.spacing(1, 2),
+    display: "flex",
+    gap: 1.25,
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column'
+    }
+}));
+
+
 const MetadataContainer = styled(Box)(({theme}) => ({
-    sm: {
+    [theme.breakpoints.down('sm')]: {
         display: "flex",
-        flexDirection: "column",
-        gap: theme.spacing(0.5)
+        gap: theme.spacing(1),
+        padding: theme.spacing(1, 0),
     },
 }));
 
@@ -44,7 +54,7 @@ const Author = ({author}: { author: string }) => {
         gap: 1
     }}>
         <PersonIcon/>
-        <Typography variant={variant} component="span">{author.substr(0, 16)}</Typography>
+        <Typography variant={variant} component="span">{author}</Typography>
     </Box>)
 }
 
@@ -111,7 +121,7 @@ function Show(props: { item: SSRItem }) {
 
         </RightContainer>
     </>) : (<>
-        <LeftContainer component="section">
+        <LeftContainer component="section" sx={{px: 1}}>
             <ItemHeading heading={item.title}/>
             <ItemContent content={item.content}/>
 
@@ -131,16 +141,11 @@ function Show(props: { item: SSRItem }) {
 
     return (<>
         <Navbar/>
-        <Box sx={{
-            padding: theme => theme.spacing(1, 2),
-            display: "flex",
-            gap: 1.25,
-            sx: {flexDirection: "column"}
-        }}>
+        <RootContainer>
             {view}
 
             {item.author === authUser.id && bottomFab}
-        </Box>
+        </RootContainer>
     </>)
 }
 

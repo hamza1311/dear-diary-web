@@ -1,18 +1,19 @@
 import React, {useState} from "react";
-import {FormControl, IconButton, Input, InputAdornment, InputLabel} from "@mui/material";
+import {FormControl, IconButton, OutlinedInput, InputAdornment, InputLabel} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 export default function PasswordField(props: { disabled: boolean, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, label: string }) {
     const [showPassword, setShowPassword] = useState(false)
 
     return (
-        <FormControl disabled={props.disabled}>
+        <FormControl disabled={props.disabled} variant="outlined">
             <InputLabel htmlFor="password">{props.label}</InputLabel>
-            <Input
+            <OutlinedInput
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={props.value}
                 onChange={props.onChange}
+                label="password"
                 endAdornment={
                     <InputAdornment position="end">
                         <IconButton
