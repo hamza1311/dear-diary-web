@@ -1,6 +1,5 @@
 import {ItemWithId} from "./Item";
-import firebase from "firebase/app";
-import 'firebase/firestore'
+import {Timestamp} from 'firebase/firestore'
 
 export interface SSRItem {
     id: string
@@ -17,8 +16,8 @@ export const itemFromSSRItem = (ssrItem: SSRItem): ItemWithId => {
         id: ssrItem.id,
         title: ssrItem.title,
         content: ssrItem.content,
-        createTime: firebase.firestore.Timestamp.fromMillis(Date.parse(ssrItem.createTime)),
-        updateTime: ssrItem.updateTime ? firebase.firestore.Timestamp.fromMillis(Date.parse(ssrItem.updateTime)) : null,
+        createTime: Timestamp.fromMillis(Date.parse(ssrItem.createTime)),
+        updateTime: ssrItem.updateTime ? Timestamp.fromMillis(Date.parse(ssrItem.updateTime)) : null,
         author: ssrItem.author,
         isShared: ssrItem.isShared
     }

@@ -1,116 +1,90 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ItemWithId} from "../models/Item";
-import {makeStyles} from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {Timestamp} from "../components/Timestamp";
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import BottomFab from "../components/BottomFab";
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@mui/icons-material/Edit";
 import removeMd from 'remove-markdown'
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import {ScreenShare, StopScreenShare} from "@material-ui/icons";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import {ScreenShare, StopScreenShare} from "@mui/icons-material";
 import copy from 'copy-to-clipboard';
 import {useRouter} from "next/router";
 import Snackbar from "../components/Snackbar";
-import firebase from "firebase/app";
-import 'firebase/firestore'
 import Link from 'next/link'
 import {AuthAction, getFirebaseAdmin, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {itemFromSSRItem, SSRItem} from "../models/SsrItem";
+import {collection} from "../utils/firebase/firestore";
+import {deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, where} from 'firebase/firestore'
+import Navbar from "../components/Navbar";
+import {Box, Card as MuiCard, CardActions as MuiCardActions, CardContent as MuiCardContent} from "@mui/material";
+import {styled} from "@mui/material/";
 
-const useStyles = makeStyles(theme => ({
-    root: {},
-    cardsContainer: {
-        display: "flex",
-        paddingTop: '1.3em',
-        gap: '1.3em',
-        flexDirection: 'column',
+
+const Card = styled(MuiCard)(({theme}) => ({
+    minWidth: 275,
+    margin: '0 auto',
+    [theme.breakpoints.down("sm")]: {
+        width: '90%',
     },
-    card: {
-        minWidth: 275,
-        margin: '0 auto',
-        [theme.breakpoints.down("sm")]: {
-            width: '90%',
-        },
-        [theme.breakpoints.up("sm")]: {
-            width: '70%',
-        },
+    [theme.breakpoints.up("sm")]: {
+        width: '70%',
     },
-    cardContent: {
-        cursor: 'pointer'
+}))
+
+const CardContent = styled(MuiCardContent)({
+    cursor: 'pointer'
+})
+
+const CardActions = styled(MuiCardActions)({
+    display: "flex",
+    justifyContent: "end"
+})
+
+const TimestampContainer = styled(MuiCardActions)(({theme}) => ({
+    display: "flex",
+    gap: '0.5em',
+    [theme.breakpoints.down("sm")]: {
+        padding: theme.spacing(1, 0)
     },
-    heading: {
-        display: "flex",
-        [theme.breakpoints.down("sm")]: {
-            flexDirection: "column"
-        },
-        [theme.breakpoints.up("lg")]: {
-            alignItems: "center",
-        },
+    [theme.breakpoints.up("sm")]: {
+        flexDirection: "column",
+        gap: theme.spacing(1),
     },
-    timeContainer: {
-        display: "flex",
-        gap: '0.5em',
-        [theme.breakpoints.down("sm")]: {
-            padding: "0.8em 0"
-        },
-        [theme.breakpoints.up("lg")]: {
-            marginLeft: "auto",
-            flexDirection: "column",
-            gap: '0.75em',
-        },
-    },
-    body: {
-        paddingTop: '0.5em'
-    },
-    actions: {
-        display: "flex",
-        justifyContent: "end"
-    },
-}));
+}))
 
 
 function Home({items: initialItems}: { items: SSRItem[] }) {
     const user = useAuthUser()
     const router = useRouter()
 
-    const classes = useStyles();
-
-    let firestore = firebase.firestore();
-    let collection = firestore.collection("items")
+    const itemsCollection = collection("items")
 
     const [items, setItems] = useState<ItemWithId[]>(initialItems.map(itemFromSSRItem))
     const uid = user.id ?? ""
     useEffect(() => {
-        return collection
-            .where('author', '==', uid)
-            .orderBy('createTime', 'desc')
-            .onSnapshot((snapshot) => {
-                const docs = snapshot.docs.map(it => {
-                    const data = it.data()
-                    return {
-                        id: it.id,
-                        ...data
-                    } as ItemWithId
-                })
-                setItems(docs)
+        const q = query(itemsCollection, where('author', '==', uid), orderBy('createTime', 'desc'))
+        return onSnapshot(q, (snapshot) => {
+            const docs = snapshot.docs.map(it => {
+                const data = it.data()
+                return {
+                    id: it.id,
+                    ...data
+                } as ItemWithId
             })
-    }, [uid])
+            setItems(docs)
+        })
+    }, [itemsCollection, uid])
     const contentLength = 255
-
-    const [snackbarOpen, setSnackbarOpen] = useState(false)
-    const snackbarMessage = useRef("");
-
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const closeSnackbar = () => setSnackbarMessage("");
 
     const cards = items.map(item => {
         let content = item.content.trim()
         if (content.length > contentLength) {
-            content = `${content.substr(0, contentLength - 3)}...`
+            content = `${content.slice(0, contentLength - 3)}...`
         }
         content = removeMd(content)
 
@@ -119,15 +93,14 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
         }
 
         const onShareClicked = async () => {
-            const newState = !item.isShared
-            await collection.doc(item.id).update('isShared', newState)
-            if (newState) {
+            const isShared = !item.isShared
+            await updateDoc(doc(itemsCollection, item.id), {isShared})
+            if (isShared) {
                 copy(window.location.href + item.id)
-                snackbarMessage.current = "Link shared to clipboard"
+                setSnackbarMessage("Link shared to clipboard")
             } else {
-                snackbarMessage.current = "Stopped sharing"
+                setSnackbarMessage("Stopped sharing")
             }
-            setSnackbarOpen(true)
         }
 
         const onEditClicked = async () => {
@@ -135,29 +108,33 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
         }
 
         const onDeleteClicked = async () => {
-            await collection.doc(item.id).delete()
+            await deleteDoc(doc(itemsCollection, item.id))
         }
 
         return (
-            <Card className={classes.card} key={item.id}>
-                <CardContent onClick={onCardClick} className={classes.cardContent}>
-                    <div className={classes.heading}>
+            <Card key={item.id}>
+                <CardContent onClick={onCardClick}>
+                    <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between"
+                    }}>
                         <Typography variant="h5" component="h2">
                             {item.title}
                         </Typography>
 
-                        <div className={classes.timeContainer}>
+                        <TimestampContainer>
                             <Timestamp timestamp={item.createTime.toDate()} icon={AccessTimeIcon}/>
                             {item.updateTime &&
-                            <Timestamp timestamp={item.updateTime.toDate()} icon={EditIcon}/>}
-                        </div>
-                    </div>
+                                <Timestamp timestamp={item.updateTime.toDate()} icon={EditIcon}/>}
+                        </TimestampContainer>
+                    </Box>
 
-                    <Typography variant="body1" component="p" className={classes.body}>
+                    <Typography variant="body1" component="p" sx={{pt: 0.5}}>
                         {content}
                     </Typography>
                 </CardContent>
-                <CardActions disableSpacing className={classes.actions}>
+                <CardActions disableSpacing>
                     <IconButton aria-label="edit" onClick={onShareClicked}>
                         {item.isShared ? <StopScreenShare/> : <ScreenShare/>}
                     </IconButton>
@@ -176,24 +153,30 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
 
 
     return (<>
-        <main className={classes.root}>
-            <section className={classes.cardsContainer}>
+        <Navbar/>
+        <Box component='main'>
+            <Box component='section' sx={{
+                display: "flex",
+                paddingTop: '1.3em',
+                gap: '1.3em',
+                flexDirection: 'column',
+            }}>
                 {cards}
-            </section>
-            <Snackbar setOpen={setSnackbarOpen} message={snackbarMessage.current} open={snackbarOpen}/>
+            </Box>
+            <Snackbar closeSnackbar={closeSnackbar} message={snackbarMessage} open={snackbarMessage !== ''}/>
 
             <Link href="/new" passHref>
                 <BottomFab>
                     <AddIcon/>
                 </BottomFab>
             </Link>
-        </main>
+        </Box>
     </>)
 }
 
 export const getServerSideProps = withAuthUserTokenSSR({
     whenUnauthed: AuthAction.REDIRECT_TO_LOGIN
-})(async ({AuthUser: user, req}) => {
+})(async ({AuthUser: user}) => {
 
     const ref = getFirebaseAdmin().firestore()
         .collection("items")

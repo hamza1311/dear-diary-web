@@ -1,23 +1,16 @@
 import React from "react";
-import {LinearProgress} from "@material-ui/core";
+import {LinearProgress} from "@mui/material";
 
 interface LoadingIndicatorProps {
-    color: 'primary' | 'secondary',
-    isVisible: boolean
-
+    color?: 'primary' | 'secondary',
+    isVisible?: boolean
 }
 
-function LoadingIndicator({color, isVisible}: LoadingIndicatorProps) {
+function LoadingIndicator({color = 'secondary', isVisible = true}: LoadingIndicatorProps) {
     if (!isVisible) {
         return <></>
     }
     return <LinearProgress color={color} />
-}
-
-
-LoadingIndicator.defaultProps = {
-    color: 'secondary',
-    isVisible: true
 }
 
 export default LoadingIndicator

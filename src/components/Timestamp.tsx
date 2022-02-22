@@ -1,15 +1,7 @@
 import React, {ElementType} from "react";
-import {makeStyles} from '@material-ui/core/styles';
 import {isToday, isYesterday, isThisWeek, isThisYear, getDate, getYear, format} from 'date-fns'
-import Typography from "@material-ui/core/Typography";
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: "flex",
-        alignItems: "center",
-        gap: theme.spacing(1)
-    },
-}));
+import {Typography, Box} from "@mui/material/";
+import {useIsOnMobile} from "../utils/hooks";
 
 const formatTime = (date: Date): string => {
     const isCurrentWeek = isThisWeek(date)
@@ -36,12 +28,21 @@ const formatTime = (date: Date): string => {
 
     return out
 }
-export const Timestamp = ({timestamp, icon: Icon}: { timestamp: Date, icon: ElementType }) => {
-    const styles = useStyles();
 
-    return <div className={styles.root}>
+export const Timestamp = ({timestamp, icon: Icon}: { timestamp: Date, icon: ElementType }) => {
+    const isOnMobile = useIsOnMobile();
+    const variant = isOnMobile ? "subtitle2" : "subtitle1";
+
+    return <Box sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        width: {
+            sm: 'max-content'
+        }
+    }}>
         <Icon />
-        <Typography variant="subtitle2" component="span">{formatTime(timestamp)}</Typography>
-    </div>
+        <Typography variant={variant} component="span">{formatTime(timestamp)}</Typography>
+    </Box>
 }
 

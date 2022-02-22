@@ -1,3 +1,6 @@
-import {useMediaQuery} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 
-export const useIsOnMobile = () => useMediaQuery('(max-width: 600px)')
+export const useIsOnMobile = () => {
+    const theme = useTheme()
+    return useMediaQuery(theme.breakpoints.down('sm'))
+}

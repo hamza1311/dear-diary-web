@@ -1,69 +1,40 @@
 import React, {useState} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import {Button, Link, Menu, MenuItem} from "@material-ui/core";
-import firebase from 'firebase/app'
+import {AccountCircle} from '@mui/icons-material';
+import {
+    AppBar,
+    Box,
+    Button,
+    IconButton,
+    Link,
+    LinkProps,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Typography,
+    useTheme
+} from "@mui/material";
+import {signOut} from '../utils/firebase/auth'
 import {useRouter} from "next/router";
 import {useAuthUser} from "next-firebase-auth";
 
-function RouterLink(props: React.PropsWithChildren<{ href: string, className: any }>) {
+function RouterLink(props: React.PropsWithChildren<LinkProps>) {
     const router = useRouter()
     const onClick = async (e: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLSpanElement>) => {
         e.preventDefault()
-        await router.push(props.href)
+        await router.push(props.href ?? '')
     }
 
     return <Link
         href={props.href}
         onClick={onClick}
-        className={props.className}
+        sx={props.sx}
     >
         {props.children}
     </Link>
 }
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-    },
-    toolbar: {
-        display: "grid",
-        gridTemplateAreas: '"title links user"',
-        gridTemplateColumns: "1fr 3fr 1fr",
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    titleContainer: {
-        flexGrow: 1,
-        gridArea: "title"
-    },
-    link: {
-        color: theme.palette.text.primary,
-        textDecoration: 'none',
-    },
-    title: {
-        fontWeight: 500
-    },
-    linksContainer: {
-        display: "flex",
-        gridArea: "links",
-    },
-    userContainer: {
-        gridArea: "user",
-        justifySelf: "end",
-    }
-}));
-
 function Navbar() {
-    const classes = useStyles();
+    const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
     const open = Boolean(anchorEl);
 
@@ -72,12 +43,12 @@ function Navbar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const user = useAuthUser()
+    // todo look at this
+    // @ts-ignore
+    const {user} = useAuthUser()
 
-    const signOut = async () => {
-        await import("firebase/auth")
-        const auth = firebase.auth()
-        await auth.signOut()
+    const handleSignOut = async () => {
+        await signOut()
         await router.push("/auth")
     }
 
@@ -92,7 +63,7 @@ function Navbar() {
     };
 
     const authMenu = (
-        <div className={classes.userContainer}>
+        <Box>
             <span>
                 <IconButton
                     aria-label="account of current user"
@@ -120,35 +91,28 @@ function Navbar() {
                 onClose={handleClose}
             >
                 <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
-                <MenuItem onClick={signOut}>Sign out</MenuItem>
+                <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
             </Menu>
-        </div>
+        </Box>
     )
 
-    const loginButton = <RouterLink href="/auth" className={classes.link}>
+    const loginButton = <RouterLink href="/auth">
         <Button>Log in</Button>
     </RouterLink>
 
     return (<>
-        <div className={classes.root}>
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <RouterLink href="/" className={`${classes.titleContainer} ${classes.link}`}>
-                        <Typography variant="h5" component="h1" className={classes.title}>
+        <Box sx={{flexGrow: 1}}>
+            <AppBar position="fixed" sx={{zIndex: theme.zIndex.drawer + 1}}>
+                <Toolbar sx={{display: "flex", justifyContent: 'space-between',}}>
+                    <RouterLink href="/" sx={{color: theme.palette.text.primary}}>
+                        <Typography variant="h5" component="h1">
                             Dear Diary
                         </Typography>
                     </RouterLink>
-                    <section className={classes.linksContainer}>
-                        <RouterLink href="/quickies" className={classes.link}>
-                            <Button>
-                                Quickies
-                            </Button>
-                        </RouterLink>
-                    </section>
-                    {user.firebaseUser ? loginButton : authMenu}
+                    {user ? loginButton : authMenu}
                 </Toolbar>
             </AppBar>
-        </div>
+        </Box>
         <Toolbar/>
     </>);
 }

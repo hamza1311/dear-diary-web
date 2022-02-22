@@ -1,37 +1,12 @@
-import {makeStyles} from "@material-ui/core/styles";
 import React, {useState} from "react";
-import firebase from "firebase/app";
-import {Button, Dialog, DialogContent, DialogActions, DialogTitle} from "@material-ui/core";
+import {Button, Dialog, DialogContent, DialogActions, DialogTitle, Box} from "@mui/material";
 import PasswordField from "./PasswordField";
-import "firebase/auth"
+import {EmailAuthProvider, reauthenticateWithCredential, updatePassword} from "firebase/auth"
 import {useAuthUser} from "next-firebase-auth";
 import Snackbar from "./Snackbar";
 
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        [theme.breakpoints.down("sm")]: {
-            marginLeft: "5%",
-        }
-    },
-    passwordHeading: {
-        marginBottom: theme.spacing(2),
-    },
-    changePasswordButton: {
-        width: 'max-content',
-    },
-    dialogContent: {
-        display: "flex",
-        flexDirection: "column",
-        gap: theme.spacing(2)
-    }
-}))
-
-export default function ChangePassword({
-                                           dialogOpen,
-                                           setDialogOpen
-                                       }: { dialogOpen: boolean, setDialogOpen: (value: boolean) => void }) {
-    const classes = useStyles()
+type Props = { dialogOpen: boolean, setDialogOpen: (value: boolean) => void }
+export default function ChangePassword({dialogOpen, setDialogOpen}: Props) {
 
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -62,10 +37,10 @@ export default function ChangePassword({
                 throw Error("unreachable")
             }
 
-            const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword)
-            await user.reauthenticateWithCredential(credential)
+            const credential = EmailAuthProvider.credential(user.email, oldPassword)
+            await reauthenticateWithCredential(user, credential)
 
-            await user.updatePassword(newPassword)
+            await updatePassword(user, newPassword)
             setSnackbarOpen(true)
         }
         setChangingPassword(false)
@@ -73,12 +48,16 @@ export default function ChangePassword({
     }
 
     return (<>
-        <section className={classes.root}>
+        <Box component="section" sx={{sm: {marginLeft: "5%"}}}>
 
             <Dialog open={dialogOpen} onClose={handleClose} aria-labelledby="change-password-dialog-title">
                 <DialogTitle id="change-password-dialog-title">Change Password</DialogTitle>
 
-                <DialogContent className={classes.dialogContent}>
+                <DialogContent sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2
+                }}>
                     <PasswordField
                         disabled={changingPassword}
                         value={oldPassword}
@@ -101,7 +80,7 @@ export default function ChangePassword({
                     />
 
                     <Button
-                        className={classes.changePasswordButton}
+                        sx={{width: 'max-content'}}
                         disabled={changingPassword}
                     >Reset password</Button>
 
@@ -113,7 +92,7 @@ export default function ChangePassword({
                     <Button onClick={changePassword} disabled={changingPassword}>Update</Button>
                 </DialogActions>
             </Dialog>
-        </section>
-        <Snackbar message="Password changed successfully" open={snackbarOpen} setOpen={setSnackbarOpen}/>
+        </Box>
+        <Snackbar message="Password changed successfully" open={snackbarOpen} closeSnackbar={() => setSnackbarOpen(false)}/>
     </>)
 }

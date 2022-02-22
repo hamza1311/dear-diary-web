@@ -1,8 +1,8 @@
-// ./initAuth.js
+import { init } from 'next-firebase-auth'
 
 
 const initAuth = async () => {
-    const { init } = await import('next-firebase-auth')
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') ?? undefined;
     init({
         authPageURL: '/auth',
         appPageURL: '/',
@@ -15,7 +15,7 @@ const initAuth = async () => {
                 clientEmail: "firebase-adminsdk-etj6s@deardiary-app.iam.gserviceaccount.com",
                 // The private key must not be accesssible on the client side.
                 // @ts-ignore
-                privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') ?? undefined,
+                privateKey,
             },
             databaseURL: 'https://deardiary-app.firebaseio.com',
         },
