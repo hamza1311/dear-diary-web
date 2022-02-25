@@ -1,11 +1,23 @@
-import {Button, Card, CardContent, CircularProgress, IconButton, TextField, Tooltip, Typography, Box, styled} from "@mui/material/";
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CircularProgress,
+    IconButton,
+    styled,
+    TextField,
+    Tooltip,
+    Typography
+} from "@mui/material/";
 import {Edit, Person, Save, Warning} from "@mui/icons-material";
 import React, {PropsWithChildren, useState} from "react";
 import ChangePassword from '../../components/ChangePassword'
 import UpdatePhotoButton from '../../components/UpdatePhotoButton'
 import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
-import {sendEmailVerification, updateEmail, updateProfile} from "@firebase/auth";
+import {sendEmailVerification, updateEmail, updateProfile} from "firebase/auth";
 import Navbar from "../../components/Navbar";
+import Head from "next/head";
 
 const ProfileInfoCard = ({children}: PropsWithChildren<unknown>) => {
     return <Card sx={{
@@ -102,6 +114,9 @@ function Profile() {
     const pfp = <ProfilePicture url={user.photoURL ?? undefined}/>
     return (
         <>
+            <Head>
+                <title>{user.displayName} | Dear Diary</title>
+            </Head>
             <Navbar/>
             <Box sx={{
                 display: "flex",

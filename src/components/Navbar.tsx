@@ -43,9 +43,8 @@ function Navbar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    // todo look at this
-    // @ts-ignore
-    const {user} = useAuthUser()
+
+    const {firebaseUser: user} = useAuthUser()
 
     const handleSignOut = async () => {
         await signOut()
@@ -109,7 +108,7 @@ function Navbar() {
                             Dear Diary
                         </Typography>
                     </RouterLink>
-                    {user ? loginButton : authMenu}
+                    {user ? authMenu : loginButton}
                 </Toolbar>
             </AppBar>
         </Box>

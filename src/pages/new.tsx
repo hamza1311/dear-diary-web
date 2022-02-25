@@ -4,10 +4,11 @@ import {Box, TextField} from '@mui/material';
 import BottomFab from "../components/BottomFab";
 import LoadingIndicator from "../components/LoadingIndicator";
 import {useRouter} from 'next/router'
-import {addDoc, serverTimestamp} from "@firebase/firestore";
+import {addDoc, serverTimestamp} from "firebase/firestore";
 import {collection} from "../utils/firebase/firestore";
 import Navbar from "../components/Navbar";
 import SaveIcon from '@mui/icons-material/Save'
+import Head from "next/head";
 
 function New() {
     const router = useRouter();
@@ -43,6 +44,9 @@ function New() {
 
     return (
         <>
+            <Head>
+                <title>Create Item | Dear Diary</title>
+            </Head>
             <Navbar/>
             <main>
                 <LoadingIndicator isVisible={isSaving}/>

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {ItemWithId} from "../models/Item";
+import React, {useState} from "react";
+import {Item} from "../models/Item";
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,11 +16,11 @@ import Snackbar from "../components/Snackbar";
 import Link from 'next/link'
 import {AuthAction, getFirebaseAdmin, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {itemFromSSRItem, SSRItem} from "../models/SsrItem";
-import {collection} from "../utils/firebase/firestore";
-import {deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, where} from 'firebase/firestore'
+import {collection, useQuerySnapshot} from "../utils/firebase/firestore";
+import {deleteDoc, doc, orderBy, query, updateDoc, where} from 'firebase/firestore'
 import Navbar from "../components/Navbar";
-import {Box, Card as MuiCard, CardActions as MuiCardActions, CardContent as MuiCardContent} from "@mui/material";
-import {styled} from "@mui/material/";
+import {Box, Card as MuiCard, CardActions as MuiCardActions, CardContent as MuiCardContent, styled} from "@mui/material";
+import Head from "next/head";
 
 
 const Card = styled(MuiCard)(({theme}) => ({
@@ -55,6 +55,7 @@ const TimestampContainer = styled(MuiCardActions)(({theme}) => ({
     },
 }))
 
+const CONTENT_LENGTH = 255
 
 function Home({items: initialItems}: { items: SSRItem[] }) {
     const user = useAuthUser()
@@ -62,29 +63,29 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
 
     const itemsCollection = collection("items")
 
-    const [items, setItems] = useState<ItemWithId[]>(initialItems.map(itemFromSSRItem))
     const uid = user.id ?? ""
-    useEffect(() => {
-        const q = query(itemsCollection, where('author', '==', uid), orderBy('createTime', 'desc'))
-        return onSnapshot(q, (snapshot) => {
-            const docs = snapshot.docs.map(it => {
-                const data = it.data()
-                return {
-                    id: it.id,
-                    ...data
-                } as ItemWithId
-            })
-            setItems(docs)
-        })
-    }, [itemsCollection, uid])
-    const contentLength = 255
+    const q = query(
+        itemsCollection,
+        where('author', '==', uid),
+        orderBy('createTime', 'desc'),
+    )
+
+    const items = useQuerySnapshot<Item>(q, () => initialItems.map(itemFromSSRItem), (data) => ({
+        title: data.title,
+        content: data.content,
+        createTime: data.createTime,
+        updateTime: data.updateTime ?? null,
+        author: data.author,
+        isShared: data.isShared ?? false,
+    }))
+
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const closeSnackbar = () => setSnackbarMessage("");
 
     const cards = items.map(item => {
         let content = item.content.trim()
-        if (content.length > contentLength) {
-            content = `${content.slice(0, contentLength - 3)}...`
+        if (content.length > CONTENT_LENGTH) {
+            content = `${content.slice(0, CONTENT_LENGTH - 3)}...`
         }
         content = removeMd(content)
 
@@ -153,6 +154,9 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
 
 
     return (<>
+        <Head>
+            <title>Dear Diary</title>
+        </Head>
         <Navbar/>
         <Box component='main'>
             <Box component='section' sx={{
@@ -182,15 +186,22 @@ export const getServerSideProps = withAuthUserTokenSSR({
         .collection("items")
         .where('author', '==', user?.id ?? "")
         .orderBy('createTime', 'desc')
+        .limit(5)
 
     const items = await ref.get()
     const docs = items.docs.map((doc) => {
         const data = doc.data()
+
+        let content = data.content.trim()
+        if (content.length > CONTENT_LENGTH) {
+            content = `${content.slice(0, CONTENT_LENGTH - 3)}...`
+        }
+
         return {
             id: doc.id,
-            content: data.content,
+            content,
             createTime: data.createTime.toDate().toISOString(),
-            isShared: data.isShared,
+            isShared: data.isShared ?? false,
             title: data.title,
             updateTime: data.updateTime?.toDate()?.toISOString() ?? null,
             author: data.author,

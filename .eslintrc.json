@@ -24,6 +24,7 @@
     "indent": ["error", 4],
     "linebreak-style": ["error", "unix"],
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "react/jsx-key": "off" // https://github.com/yannickcr/eslint-plugin-react/issues/3215
   }
 }

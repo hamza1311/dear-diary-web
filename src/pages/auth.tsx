@@ -4,8 +4,9 @@ import {Box, Button, Card, CardContent} from "@mui/material";
 import LoadingIndicator from "../components/LoadingIndicator";
 import PasswordField from "../components/PasswordField";
 import {useRouter} from "next/router";
-import {AuthAction, withAuthUser} from "next-firebase-auth";
+import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {signInWithEmailAndPassword} from "../utils/firebase/auth";
+import Head from "next/head";
 
 function SignIn() {
     const router = useRouter()
@@ -71,7 +72,16 @@ function SignIn() {
 }
 
 function Auth() {
-    return <SignIn/>
+    return <>
+        <Head>
+            <title>Sign In | Dear Diary</title>
+        </Head>
+        <SignIn/>
+    </>
 }
+
+export const getServerSideProps = withAuthUserTokenSSR({
+    whenAuthed: AuthAction.REDIRECT_TO_APP,
+})()
 
 export default withAuthUser({whenAuthed: AuthAction.REDIRECT_TO_APP})(Auth)

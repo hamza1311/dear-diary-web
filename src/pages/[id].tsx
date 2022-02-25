@@ -9,6 +9,9 @@ import {useRouter} from "next/router";
 import BottomFab from "../components/BottomFab";
 import Navbar from "../components/Navbar";
 import {Box, styled, Typography} from "@mui/material/";
+import LoadingIndicator from "../components/LoadingIndicator";
+import type { FunctionComponent } from 'react'
+import Head from "next/head";
 
 const RootContainer = styled(Box)(({theme}) => ({
     padding: theme.spacing(1, 2),
@@ -96,7 +99,9 @@ const ItemContent = ({content}: { content: string }) => {
     )
 }
 
-function Show(props: { item: SSRItem }) {
+interface Props { item: SSRItem }
+
+function Show(props: Props) {
     const item = itemFromSSRItem(props.item)
     const isOnMobile = useIsOnMobile();
     const router = useRouter()
@@ -140,6 +145,9 @@ function Show(props: { item: SSRItem }) {
     )
 
     return (<>
+        <Head>
+            <title>{item.title} | Dear Diary</title>
+        </Head>
         <Navbar/>
         <RootContainer>
             {view}
@@ -162,7 +170,11 @@ export const getServerSideProps = withAuthUserTokenSSR({
     return data
 })
 
-export default withAuthUser({
+const Loader: FunctionComponent = () => <LoadingIndicator />
+
+export default withAuthUser<Props>({
+    whenAuthed: AuthAction.REDIRECT_TO_APP,
+    whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
     whenUnauthedAfterInit: AuthAction.RENDER,
-    // @ts-ignore
+    LoaderComponent: Loader
 })(Show)

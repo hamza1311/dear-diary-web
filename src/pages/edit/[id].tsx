@@ -10,6 +10,7 @@ import {useRouter} from "next/router";
 import {doc, serverTimestamp, updateDoc} from "firebase/firestore";
 import {collection} from "../../utils/firebase/firestore";
 import {Box, TextField} from "@mui/material/";
+import Head from "next/head";
 
 function Edit(props: { item: SSRItem }) {
     const item = itemFromSSRItem(props.item)
@@ -37,6 +38,9 @@ function Edit(props: { item: SSRItem }) {
 
     return (
         <>
+            <Head>
+                <title>Editing ${item.title} | Dear Diary</title>
+            </Head>
             <Navbar/>
             <main>
                 <LoadingIndicator isVisible={isSaving}/>

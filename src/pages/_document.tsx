@@ -1,17 +1,14 @@
 import * as React from 'react';
 import Document, {Head, Html, Main, NextScript} from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
+import type {StyledTags} from '@emotion/styled';
 import createEmotionCache from '../utils/createEmotionCache';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default class MyDocument extends Document<{emotionStyleTags: any}> {
+export default class MyDocument extends Document<{emotionStyleTags: StyledTags}> {
     render() {
         return (
             <Html lang="en">
                 <Head>
-                    {/* TODO title for every page */}
-                    {/* eslint-disable-next-line @next/next/no-title-in-document-head */}
-                    <title>Dear Diary</title>
                     <link rel="stylesheet"
                         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
                     <link rel="icon" href="/favicon.png"/>
