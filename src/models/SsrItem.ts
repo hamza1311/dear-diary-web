@@ -1,4 +1,5 @@
 import {ItemWithId} from "./Item";
+import {User} from "./User";
 import {Timestamp} from 'firebase/firestore'
 
 export interface SSRItem {
@@ -7,7 +8,7 @@ export interface SSRItem {
     content: string
     createTime: string
     updateTime: string | null
-    author: string
+    author: User
     isShared: boolean
 }
 

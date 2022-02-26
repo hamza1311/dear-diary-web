@@ -12,6 +12,7 @@ import {Box, styled, Typography} from "@mui/material/";
 import LoadingIndicator from "../components/LoadingIndicator";
 import type { FunctionComponent } from 'react'
 import Head from "next/head";
+import {User} from "../models/User";
 
 const RootContainer = styled(Box)(({theme}) => ({
     padding: theme.spacing(1, 2),
@@ -47,9 +48,13 @@ const RightContainer = styled(Box)(({theme}) => ({
     },
 }));
 
-const Author = ({author}: { author: string }) => {
+const Author = ({author}: { author: string | User }) => {
     const isOnMobile = useIsOnMobile();
     const variant = isOnMobile ? "subtitle2" : "subtitle1";
+
+    if (typeof author === 'object') {
+        author = author.displayName
+    }
 
     return (<Box sx={{
         display: "flex",
@@ -152,7 +157,7 @@ function Show(props: Props) {
         <RootContainer>
             {view}
 
-            {item.author === authUser.id && bottomFab}
+            {(typeof item.author === 'object' && item.author.uid === authUser.id) && bottomFab}
         </RootContainer>
     </>)
 }
@@ -173,7 +178,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 const Loader: FunctionComponent = () => <LoadingIndicator />
 
 export default withAuthUser<Props>({
-    whenAuthed: AuthAction.REDIRECT_TO_APP,
+    whenAuthed: AuthAction.RENDER,
     whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
     whenUnauthedAfterInit: AuthAction.RENDER,
     LoaderComponent: Loader

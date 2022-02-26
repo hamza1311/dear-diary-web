@@ -90,6 +90,7 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
         content = removeMd(content)
 
         const onCardClick = async () => {
+            console.log('id', item.id)
             await router.push(`/${item.id}`)
         }
 

@@ -12,7 +12,9 @@ import {collection} from "../../utils/firebase/firestore";
 import {Box, TextField} from "@mui/material/";
 import Head from "next/head";
 
-function Edit(props: { item: SSRItem }) {
+interface Props { item: SSRItem }
+
+function Edit(props: Props) {
     const item = itemFromSSRItem(props.item)
 
     const [title, setTitle] = useState(item.title)
@@ -79,7 +81,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
     return getDocFromIdServerSide(context)
 })
 
-export default withAuthUser({
+export default withAuthUser<Props>({
     whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-    // @ts-ignore
 })(Edit)

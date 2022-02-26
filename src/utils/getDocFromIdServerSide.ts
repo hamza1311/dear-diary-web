@@ -1,6 +1,8 @@
 import {GetServerSidePropsContext} from "next";
 import {AuthUser, getFirebaseAdmin} from "next-firebase-auth";
 import {SSRItem} from "../models/SsrItem";
+import firebase from "firebase/compat";
+import User = firebase.User;
 
 const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { AuthUser: AuthUser }) => {
     const id = context.query.id?.toString() ?? undefined
@@ -31,9 +33,9 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
     }
     const data = doc.data()
     // @ts-ignore
-    const {updateTime, createTime, isShared, title, author, content} = data;
+    const {updateTime, createTime, isShared, title, author: authorId, content} = data;
 
-    const fetchedAuthor = await firestore.collection("users").doc(author).get()
+    const fetchedAuthor = await firestore.collection("users").doc(authorId).get()
 
     const item = {
         id: doc.id,
@@ -42,10 +44,10 @@ const getDocFromIdServerSide = async (context: GetServerSidePropsContext & { Aut
         isShared: isShared,
         title: title,
         updateTime: updateTime?.toDate()?.toISOString() ?? null,
-        author: fetchedAuthor.data()?.displayName,
+        author: fetchedAuthor.data() as User,
     } as SSRItem
 
-    if (item.author === context.AuthUser.id || item.isShared) {
+    if (authorId === context.AuthUser.id || item.isShared) {
         return {
             props: {
                 item

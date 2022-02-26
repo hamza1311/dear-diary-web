@@ -3,14 +3,11 @@ import TextField from '@mui/material/TextField';
 import {Box, Button, Card, CardContent} from "@mui/material";
 import LoadingIndicator from "../components/LoadingIndicator";
 import PasswordField from "../components/PasswordField";
-import {useRouter} from "next/router";
-import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
+import {AuthAction, withAuthUser} from "next-firebase-auth";
 import {signInWithEmailAndPassword} from "../utils/firebase/auth";
 import Head from "next/head";
 
 function SignIn() {
-    const router = useRouter()
-
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [signingIn, setSigningIn] = useState(false)
@@ -20,7 +17,6 @@ function SignIn() {
         setSigningIn(true)
         await signInWithEmailAndPassword(email, password)
         setSigningIn(false)
-        await router.push("/")
     }
 
     const form = (
@@ -79,9 +75,5 @@ function Auth() {
         <SignIn/>
     </>
 }
-
-export const getServerSideProps = withAuthUserTokenSSR({
-    whenAuthed: AuthAction.REDIRECT_TO_APP,
-})()
 
 export default withAuthUser({whenAuthed: AuthAction.REDIRECT_TO_APP})(Auth)

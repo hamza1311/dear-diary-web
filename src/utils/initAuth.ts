@@ -3,7 +3,6 @@ import { init } from 'next-firebase-auth'
 
 const initAuth = async () => {
     const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') ?? undefined;
-    console.log(privateKey?.slice(0, 100))
     init({
         authPageURL: '/auth',
         appPageURL: '/',
