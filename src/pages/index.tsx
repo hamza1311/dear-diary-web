@@ -182,7 +182,9 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
 export const getServerSideProps = withAuthUserTokenSSR({
     whenUnauthed: AuthAction.REDIRECT_TO_LOGIN
 })(async ({AuthUser: user}) => {
+    console.log('running getServerSideProps');
 
+    console.time('index.tsx: getServerSideProps: get data from firestore')
     const ref = getFirebaseAdmin().firestore()
         .collection("items")
         .where('author', '==', user?.id ?? "")
@@ -190,6 +192,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
         .limit(5)
 
     const items = await ref.get()
+    console.timeEnd('index.tsx: getServerSideProps: get data from firestore')
     const docs = items.docs.map((doc) => {
         const data = doc.data()
 
