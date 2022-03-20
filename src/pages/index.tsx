@@ -58,6 +58,7 @@ const TimestampContainer = styled(MuiCardActions)(({theme}) => ({
 const CONTENT_LENGTH = 255
 
 function Home({items: initialItems}: { items: SSRItem[] }) {
+    console.log({initialItems})
     const user = useAuthUser()
     const router = useRouter()
 
@@ -195,12 +196,12 @@ export const getServerSideProps = withAuthUserTokenSSR({
     type FetchedDocs  = {[field: string]: any}[]
 
     const fetchedDocs = await Promise.race([
-        async () => {
+        (async () => {
             console.time('index.tsx: getServerSideProps: get data from ref')
             const items = await ref.get()
             console.timeEnd('index.tsx: getServerSideProps: get data from firestore')
             return items.docs
-        },
+        })(),
         new Promise((resolve) => {
             setTimeout(() => {
                 console.warn('timed out')
