@@ -191,6 +191,9 @@ export const getServerSideProps = withAuthUserTokenSSR({
         .limit(5)
     console.time('index.tsx: getServerSideProps: created ref')
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    type FetchedDocs  = {[field: string]: any}[]
+
     const fetchedDocs = await Promise.race([
         async () => {
             console.time('index.tsx: getServerSideProps: get data from ref')
@@ -204,7 +207,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
                 resolve([]);
             }, 8000);
         })
-    ])
+    ]) as FetchedDocs
 
     const docs = fetchedDocs.map((doc) => {
         const data = doc.data()
