@@ -184,16 +184,29 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({AuthUser: user}) => {
     console.log('running getServerSideProps');
 
-    console.time('index.tsx: getServerSideProps: get data from firestore')
     const ref = getFirebaseAdmin().firestore()
         .collection("items")
         .where('author', '==', user?.id ?? "")
         .orderBy('createTime', 'desc')
         .limit(5)
+    console.time('index.tsx: getServerSideProps: created ref')
 
-    const items = await ref.get()
-    console.timeEnd('index.tsx: getServerSideProps: get data from firestore')
-    const docs = items.docs.map((doc) => {
+    const fetchedDocs = await Promise.race([
+        async () => {
+            console.time('index.tsx: getServerSideProps: get data from ref')
+            const items = await ref.get()
+            console.timeEnd('index.tsx: getServerSideProps: get data from firestore')
+            return items.docs
+        },
+        new Promise((resolve) => {
+            setTimeout(() => {
+                console.warn('timed out')
+                resolve([]);
+            }, 8000);
+        })
+    ])
+
+    const docs = fetchedDocs.map((doc) => {
         const data = doc.data()
 
         let content = data.content.trim()
