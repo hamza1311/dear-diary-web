@@ -3,7 +3,7 @@ import {setAuthCookies} from 'next-firebase-auth'
 import initAuth from '../../utils/initAuth'
 import {NextApiRequest, NextApiResponse} from "next"; // the module you created above
 
-initAuth()
+initAuth('login.ts')
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log('login handler')

@@ -19,7 +19,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig)
 
-initAuth()
+initAuth('_app.tsx')
 
 
 function MyApp({Component, pageProps, router}: AppProps) {

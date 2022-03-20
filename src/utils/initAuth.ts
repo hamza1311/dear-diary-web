@@ -1,7 +1,9 @@
 import { init } from 'next-firebase-auth'
 
 
-const initAuth = async () => {
+const initAuth = (from?: string) => {
+    console.log('init auth')
+    console.time(`initAuth: ${from}`)
     const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') ?? undefined;
     init({
         authPageURL: '/auth',
@@ -46,6 +48,7 @@ const initAuth = async () => {
             signed: true,
         },
     })
+    console.timeEnd(`initAuth: ${from}`)
 }
 
 export default initAuth
