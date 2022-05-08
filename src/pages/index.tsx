@@ -17,7 +17,7 @@ import Link from 'next/link'
 import {AuthAction, getFirebaseAdmin, useAuthUser, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import {itemFromSSRItem, SSRItem} from "../models/SsrItem";
 import {collection, useQuerySnapshot} from "../utils/firebase/firestore";
-import {deleteDoc, doc, orderBy, query, updateDoc, where} from 'firebase/firestore'
+import {deleteDoc, doc, orderBy, query, updateDoc, where, limit} from 'firebase/firestore'
 import Navbar from "../components/Navbar";
 import {Box, Card as MuiCard, CardActions as MuiCardActions, CardContent as MuiCardContent, styled} from "@mui/material";
 import Head from "next/head";
@@ -69,6 +69,7 @@ function Home({items: initialItems}: { items: SSRItem[] }) {
         itemsCollection,
         where('author', '==', uid),
         orderBy('createTime', 'desc'),
+        limit(10),
     )
 
     const items = useQuerySnapshot<Item>(q, () => initialItems.map(itemFromSSRItem), (data) => ({
